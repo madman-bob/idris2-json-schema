@@ -1,0 +1,4 @@
+$1 Number.json
+cat Number.idr
+
+rm Number.idr

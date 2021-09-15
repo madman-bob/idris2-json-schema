@@ -1,0 +1,4 @@
+$1 String.json
+cat String.idr
+
+rm String.idr

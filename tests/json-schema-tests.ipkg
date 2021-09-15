@@ -1,0 +1,8 @@
+package json-schema-tests
+
+sourcedir = "."
+
+depends = contrib, test
+
+main = JSONSchemaTests
+executable = json-schema-tests

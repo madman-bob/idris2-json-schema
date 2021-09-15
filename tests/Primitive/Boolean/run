@@ -1,0 +1,4 @@
+$1 Boolean.json
+cat Boolean.idr
+
+rm Boolean.idr

@@ -1,0 +1,15 @@
+package json-schema
+
+sourcedir = "JSONSchema"
+
+depends = contrib
+
+modules =
+    JSONSchema,
+    JSONSchema.Compiler,
+    JSONSchema.Data,
+    JSONSchema.JSONUtils,
+    JSONSchema.Parser
+
+main = JSONSchema
+executable = json-schema

@@ -1,0 +1,5 @@
+/build
+/tests/build
+/tests/**/*.idr
+/tests/**/output
+/tests/failures

@@ -6,6 +6,11 @@ import JSONSchema.Data
 import JSONSchema.Parser.Error
 import JSONSchema.JSONUtils
 
+parseAny : JSON -> Maybe JSONSchema
+parseAny (JObject xs) = Just JSAny
+parseAny (JBoolean True) = Just JSAny
+parseAny _ = Nothing
+
 mutual
     parsePrimitive : JSON -> Maybe JSONSchema
     parsePrimitive schema = parseAsType !(lookup "type" schema)
@@ -38,4 +43,5 @@ mutual
     export
     parse : JSON -> Maybe JSONSchema
     parse schema =
-        (parsePrimitive schema)
+        (parsePrimitive schema) <|>
+        (parseAny schema)

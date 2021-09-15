@@ -1,0 +1,10 @@
+$1 Any1.json
+cat Any1.idr
+
+echo "---"
+
+$1 Any2.json
+cat Any2.idr
+
+rm Any1.idr
+rm Any2.idr

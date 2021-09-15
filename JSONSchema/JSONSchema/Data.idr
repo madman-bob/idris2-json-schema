@@ -11,6 +11,7 @@ mutual
     data JSONSchema = JSAtom JSONAtomSchema
                     | JSObject (List JSONPropertySchema)
                     | JSArray JSONSchema
+                    | JSAny
 
     public export
     record JSONPropertySchema where

@@ -1,0 +1,9 @@
+import Language.JSON
+
+Main : Type
+Main = JSON
+---
+import Language.JSON
+
+Main : Type
+Main = JSON

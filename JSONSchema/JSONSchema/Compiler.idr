@@ -1,9 +1,6 @@
 module JSONSchema.Compiler
 
-import Control.Monad.Identity
-import Control.Monad.Writer
-import Data.SnocList
-
+import JSONSchema.Compiler.Data
 import JSONSchema.Data
 import JSONSchema.StringUtils
 
@@ -21,22 +18,32 @@ asIdrisType JSBoolean = "Bool"
 asIdrisType JSNumber = "Double"
 asIdrisType JSString = "String"
 
-writeSchema : (name : String) -> JSONSchema -> SnocList String
-writeSchema name (JSAtom atomSchema) = [<"\{name} : Type" , "\{name} = \{asIdrisType atomSchema}"]
-writeSchema name (JSObject props) = execWriter $ do
+writeSchema : (name : String) -> JSONSchema -> Writer IdrisModule ()
+writeSchema name (JSAtom atomSchema) = addLines [<"\{name} : Type" , "\{name} = \{asIdrisType atomSchema}"]
+writeSchema name (JSObject props) = do
     propNames <- for props $ \(MkJSONPropertySchema propName propSchema) => do
         let typeName = name ++ asIdrisTypeName propName
-        tell $ writeSchema typeName propSchema :< ""
+        writeSchema typeName propSchema
+        addLines [<""]
         pure (propName, typeName)
-    tell [<"record \{name} where" , "    constructor Mk\{name}"]
+    addLines [<"record \{name} where" , "    constructor Mk\{name}"]
     for_ propNames $ \(propName, typeName) => do
-        tell [<"    \{asIdrisPropName propName} : \{typeName}"]
-writeSchema name (JSArray itemSchema) = execWriter $ do
+        addLines [<"    \{asIdrisPropName propName} : \{typeName}"]
+writeSchema name (JSArray itemSchema) = do
     let itemName = name ++ "Item"
-    tell $ writeSchema itemName itemSchema :< ""
-    tell $ [<"\{name} : Type", "\{name} = List \{itemName}"]
+    writeSchema itemName itemSchema
+    addLines [<"", "\{name} : Type", "\{name} = List \{itemName}"]
+writeSchema name JSAny = do
+    addImport "Language.JSON"
+    addLines [<"\{name} : Type" , "\{name} = JSON"]
 
 export
 compileSchema : JSONSchema -> List String
 compileSchema schema = cast {from = SnocList String} $ execWriter $ do
-    tell $ writeSchema "Main" schema
+    let idrisModule = execWriter $ writeSchema "Main" schema
+
+    case SortedSet.toList $ imports idrisModule of
+        [] => pure ()
+        xs => tell $ cast (map ("import " ++) xs) :< ""
+
+    tell $ lines idrisModule

@@ -1,0 +1,34 @@
+MainFirstName : Type
+MainFirstName = String
+
+MainLastName : Type
+MainLastName = String
+
+MainBirthday : Type
+MainBirthday = String
+
+MainAddressStreetAddress : Type
+MainAddressStreetAddress = String
+
+MainAddressCity : Type
+MainAddressCity = String
+
+MainAddressState : Type
+MainAddressState = String
+
+MainAddressCountry : Type
+MainAddressCountry = String
+
+record MainAddress where
+    constructor MkMainAddress
+    streetAddress : MainAddressStreetAddress
+    city : MainAddressCity
+    state : MainAddressState
+    country : MainAddressCountry
+
+record Main where
+    constructor MkMain
+    firstName : MainFirstName
+    lastName : MainLastName
+    birthday : MainBirthday
+    address : MainAddress

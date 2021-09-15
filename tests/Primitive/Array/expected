@@ -1,0 +1,5 @@
+MainItem : Type
+MainItem = String
+
+Main : Type
+Main = List MainItem

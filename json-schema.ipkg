@@ -9,7 +9,9 @@ modules =
     JSONSchema.Compiler,
     JSONSchema.Data,
     JSONSchema.JSONUtils,
-    JSONSchema.Parser
+    JSONSchema.Parser,
+    JSONSchema.Parser.Error,
+    JSONSchema.StringUtils
 
 main = JSONSchema
 executable = json-schema

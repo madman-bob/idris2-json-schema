@@ -4,7 +4,7 @@ all: json-schema
 
 json-schema: build/exec/json-schema
 
-build/exec/json-schema: json-schema.ipkg JSONSchema/* JSONSchema/*/*
+build/exec/json-schema: json-schema.ipkg JSONSchema/* JSONSchema/*/* JSONSchema/*/*/*
 	idris2 --build json-schema.ipkg
 
 test:

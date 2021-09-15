@@ -1,0 +1,4 @@
+$1 Object.json
+cat Object.idr
+
+rm Object.idr

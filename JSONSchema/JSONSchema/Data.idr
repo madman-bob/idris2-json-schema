@@ -14,6 +14,7 @@ mutual
                     | JSObject (List JSONPropertySchema)
                     | JSArray JSONSchema
                     | JSEnum (List JSON)
+                    | JSAnyOf (List JSONSchema)
                     | JSAny
 
     public export

@@ -1,0 +1,4 @@
+$1 AnyOf.json
+cat AnyOf.idr
+
+rm AnyOf.idr

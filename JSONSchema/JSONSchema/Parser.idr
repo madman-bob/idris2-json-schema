@@ -46,9 +46,16 @@ mutual
         itemSchema <- lookup "items" schema
         pure $ JSArray !(parse itemSchema)
 
+    parseAnyOf : JSON -> Maybe JSONSchema
+    parseAnyOf schema = do
+        JArray options <- lookup "anyOf" schema
+            | _ => Nothing
+        pure $ JSAnyOf !(allOk $ map parse options)
+
     export
     parse : JSON -> Maybe JSONSchema
     parse schema =
+        (parseAnyOf schema) <|>
         (parseEnum schema) <|>
         (parsePrimitive schema) <|>
         (parseAny schema)

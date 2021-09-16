@@ -31,6 +31,14 @@ jsonAsName (JString s) = asIdrisTypeName s
 jsonAsName (JArray xs) = "Array" ++ (concat $ map (("_" ++) . jsonAsName) xs)
 jsonAsName (JObject props) = "Object" ++ (concat $ map (\(name, val) => "_\{name}_\{jsonAsName val}") props)
 
+||| Generate names for an anonymous collection of children of a named item
+genNames : String -> List a -> List (String, a)
+genNames parentName xs = map (\(n, x) => (parentName ++ show n, x)) $ enum 0 xs
+  where
+    enum : Nat -> List a -> List (Nat, a)
+    enum n [] = []
+    enum n (x :: xs) = (n, x) :: enum (S n) xs
+
 mutual
     writeSchema : (name : String) -> JSONSchema -> Writer IdrisModule ()
     writeSchema name (JSObject props) = do
@@ -43,6 +51,11 @@ mutual
             addLines [<"    \{asIdrisPropName propName} : \{ref}"]
     writeSchema name (JSEnum options) = do
         addLines [<"data \{name} = " ++ (concat $ intersperse " | " $ map ((name ++) . jsonAsName) options)]
+    writeSchema name (JSAnyOf schemas) = do
+        variants <- for (genNames name schemas) $ \(name, schema) => do
+            ref <- refSchema (name ++ "T") schema
+            pure $ name ++ " " ++ ref
+        addLines [<"data \{name} = " ++ (concat $ intersperse " | " variants)]
     writeSchema name schema = do
         ref <- refSchema name schema
         addLines [<"\{name} : Type" , "\{name} = \{ref}"]

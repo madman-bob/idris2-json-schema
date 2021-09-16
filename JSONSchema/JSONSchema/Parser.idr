@@ -6,6 +6,12 @@ import JSONSchema.Data
 import JSONSchema.Parser.Error
 import JSONSchema.JSONUtils
 
+parseEnum : JSON -> Maybe JSONSchema
+parseEnum schema = do
+    JArray options <- lookup "enum" schema
+        | _ => Nothing
+    pure $ JSEnum options
+
 parseAny : JSON -> Maybe JSONSchema
 parseAny (JObject xs) = Just JSAny
 parseAny (JBoolean True) = Just JSAny
@@ -43,5 +49,6 @@ mutual
     export
     parse : JSON -> Maybe JSONSchema
     parse schema =
+        (parseEnum schema) <|>
         (parsePrimitive schema) <|>
         (parseAny schema)

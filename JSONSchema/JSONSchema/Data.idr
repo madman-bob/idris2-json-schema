@@ -1,5 +1,7 @@
 module JSONSchema.Data
 
+import Language.JSON
+
 public export
 data JSONAtomSchema = JSNull
                     | JSBoolean
@@ -11,6 +13,7 @@ mutual
     data JSONSchema = JSAtom JSONAtomSchema
                     | JSObject (List JSONPropertySchema)
                     | JSArray JSONSchema
+                    | JSEnum (List JSON)
                     | JSAny
 
     public export

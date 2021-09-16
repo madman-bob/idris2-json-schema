@@ -1,0 +1,15 @@
+{
+  "enum": [
+    null,
+    false,
+    {
+      "key": "value"
+    },
+    [
+      "Lorem",
+      "ipsum"
+    ],
+    1,
+    "Hello, world"
+  ]
+}

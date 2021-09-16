@@ -1,0 +1,4 @@
+$1 Enum.json
+cat Enum.idr
+
+rm Enum.idr

@@ -1,5 +1,9 @@
 module JSONSchema.Compiler
 
+import Data.List
+
+import Language.JSON
+
 import JSONSchema.Compiler.Data
 import JSONSchema.Data
 import JSONSchema.StringUtils
@@ -18,6 +22,15 @@ asIdrisType JSBoolean = "Bool"
 asIdrisType JSNumber = "Double"
 asIdrisType JSString = "String"
 
+||| Represent a JSON object as a valid Idris type identifier
+jsonAsName : JSON -> String
+jsonAsName JNull = "Null"
+jsonAsName (JBoolean b) = show b
+jsonAsName (JNumber x) = show x
+jsonAsName (JString s) = asIdrisTypeName s
+jsonAsName (JArray xs) = "Array" ++ (concat $ map (("_" ++) . jsonAsName) xs)
+jsonAsName (JObject props) = "Object" ++ (concat $ map (\(name, val) => "_\{name}_\{jsonAsName val}") props)
+
 writeSchema : (name : String) -> JSONSchema -> Writer IdrisModule ()
 writeSchema name (JSAtom atomSchema) = addLines [<"\{name} : Type" , "\{name} = \{asIdrisType atomSchema}"]
 writeSchema name (JSObject props) = do
@@ -33,6 +46,8 @@ writeSchema name (JSArray itemSchema) = do
     let itemName = name ++ "Item"
     writeSchema itemName itemSchema
     addLines [<"", "\{name} : Type", "\{name} = List \{itemName}"]
+writeSchema name (JSEnum options) = do
+    addLines [<"data \{name} = " ++ (concat $ intersperse " | " $ map ((name ++) . jsonAsName) options)]
 writeSchema name JSAny = do
     addImport "Language.JSON"
     addLines [<"\{name} : Type" , "\{name} = JSON"]

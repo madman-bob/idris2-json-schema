@@ -4,7 +4,7 @@ import Test.Golden
 
 primitiveTests : TestPool
 primitiveTests = MkTestPool "Primitive" [] Nothing [
-    "Array", "Boolean", "Null", "Number", "Object", "String"
+    "Array", "Boolean", "Nested", "Null", "Number", "Object", "String"
   ]
 
 composeTests : TestPool

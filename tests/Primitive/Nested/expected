@@ -1,0 +1,10 @@
+record MainItem where
+    constructor MkMainItem
+    title : String
+    year : Double
+    cast : List String
+    dvdAvailable : Bool
+    vinylAvailable : ()
+
+Main : Type
+Main = List MainItem

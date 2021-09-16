@@ -1,0 +1,26 @@
+{
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string"
+      },
+      "year": {
+        "type": "number"
+      },
+      "cast": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "dvdAvailable": {
+        "type": "boolean"
+      },
+      "vinylAvailable": {
+        "type": "null"
+      }
+    }
+  }
+}

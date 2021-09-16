@@ -1,0 +1,4 @@
+$1 Nested.json
+cat Nested.idr
+
+rm Nested.idr

@@ -31,26 +31,37 @@ jsonAsName (JString s) = asIdrisTypeName s
 jsonAsName (JArray xs) = "Array" ++ (concat $ map (("_" ++) . jsonAsName) xs)
 jsonAsName (JObject props) = "Object" ++ (concat $ map (\(name, val) => "_\{name}_\{jsonAsName val}") props)
 
-writeSchema : (name : String) -> JSONSchema -> Writer IdrisModule ()
-writeSchema name (JSAtom atomSchema) = addLines [<"\{name} : Type" , "\{name} = \{asIdrisType atomSchema}"]
-writeSchema name (JSObject props) = do
-    propNames <- for props $ \(MkJSONPropertySchema propName propSchema) => do
-        let typeName = name ++ asIdrisTypeName propName
-        writeSchema typeName propSchema
+mutual
+    writeSchema : (name : String) -> JSONSchema -> Writer IdrisModule ()
+    writeSchema name (JSObject props) = do
+        propNames <- for props $ \(MkJSONPropertySchema propName propSchema) => do
+            let typeName = name ++ asIdrisTypeName propName
+            ref <- refSchema typeName propSchema
+            pure (propName, ref)
+        addLines [<"record \{name} where" , "    constructor Mk\{name}"]
+        for_ propNames $ \(propName, ref) => do
+            addLines [<"    \{asIdrisPropName propName} : \{ref}"]
+    writeSchema name (JSEnum options) = do
+        addLines [<"data \{name} = " ++ (concat $ intersperse " | " $ map ((name ++) . jsonAsName) options)]
+    writeSchema name schema = do
+        ref <- refSchema name schema
+        addLines [<"\{name} : Type" , "\{name} = \{ref}"]
+
+    ||| Get a potentially-anonymous reference to the type described by a schema
+    ||| The type can use the given name to construct itself, if necessary
+    refSchema : (name : String) -> JSONSchema -> Writer IdrisModule String
+    refSchema _ (JSAtom atomSchema) = pure $ asIdrisType atomSchema
+    refSchema name (JSArray itemSchema) = do
+        let itemName = name ++ "Item"
+        ref <- refSchema itemName itemSchema
+        pure $ "List \{ref}"
+    refSchema _ JSAny = do
+        addImport "Language.JSON"
+        pure "JSON"
+    refSchema name schema = do
+        writeSchema name schema
         addLines [<""]
-        pure (propName, typeName)
-    addLines [<"record \{name} where" , "    constructor Mk\{name}"]
-    for_ propNames $ \(propName, typeName) => do
-        addLines [<"    \{asIdrisPropName propName} : \{typeName}"]
-writeSchema name (JSArray itemSchema) = do
-    let itemName = name ++ "Item"
-    writeSchema itemName itemSchema
-    addLines [<"", "\{name} : Type", "\{name} = List \{itemName}"]
-writeSchema name (JSEnum options) = do
-    addLines [<"data \{name} = " ++ (concat $ intersperse " | " $ map ((name ++) . jsonAsName) options)]
-writeSchema name JSAny = do
-    addImport "Language.JSON"
-    addLines [<"\{name} : Type" , "\{name} = JSON"]
+        pure name
 
 export
 compileSchema : JSONSchema -> List String

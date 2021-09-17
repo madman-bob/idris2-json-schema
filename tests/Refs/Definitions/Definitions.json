@@ -1,0 +1,19 @@
+{
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/film"
+  },
+  "definitions": {
+    "film": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "year": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

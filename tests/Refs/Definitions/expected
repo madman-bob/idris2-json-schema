@@ -1,0 +1,15 @@
+record Film where
+    constructor MkFilm
+    title : String
+    year : Double
+
+Main : Type
+Main = List Film
+---
+record Film where
+    constructor MkFilm
+    title : String
+    year : Double
+
+Main : Type
+Main = List Film

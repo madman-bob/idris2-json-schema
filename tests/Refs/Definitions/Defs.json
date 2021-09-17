@@ -1,0 +1,19 @@
+{
+  "type": "array",
+  "items": {
+    "$ref": "#/$defs/film"
+  },
+  "$defs": {
+    "film": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "year": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

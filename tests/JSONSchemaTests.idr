@@ -12,10 +12,16 @@ composeTests = MkTestPool "Compose" [] Nothing [
     "Any", "AnyOf", "Enum"
   ]
 
+refTests : TestPool
+refTests = MkTestPool "Ref" [] Nothing [
+    "Definitions"
+  ]
+
 main : IO ()
 main = runner [
     testPaths "Primitive" primitiveTests,
-    testPaths "Compose" composeTests
+    testPaths "Compose" composeTests,
+    testPaths "Refs" refTests
   ]
   where
     testPaths : String -> TestPool -> TestPool

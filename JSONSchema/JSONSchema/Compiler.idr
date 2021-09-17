@@ -1,6 +1,8 @@
 module JSONSchema.Compiler
 
 import Data.List
+import Data.List1
+import Data.String
 
 import Language.JSON
 
@@ -41,7 +43,14 @@ genNames parentName xs = map (\(n, x) => (parentName ++ show n, x)) $ enum 0 xs
 
 mutual
     writeSchema : (name : String) -> JSONSchema -> Writer IdrisModule ()
-    writeSchema name (JSObject props) = do
+    writeSchema name (MkJSONSchema defs constraints) = do
+        for_ (SortedMap.toList defs) $ \(name, schema) => do
+            writeSchema (asIdrisTypeName name) schema
+            addLines [<""]
+        writeSchemaConstraints name constraints
+
+    writeSchemaConstraints : (name : String) -> JSONSchemaConstraints -> Writer IdrisModule ()
+    writeSchemaConstraints name (JSObject props) = do
         propNames <- for props $ \(MkJSONPropertySchema propName propSchema) => do
             let typeName = name ++ asIdrisTypeName propName
             ref <- refSchema typeName propSchema
@@ -49,30 +58,38 @@ mutual
         addLines [<"record \{name} where" , "    constructor Mk\{name}"]
         for_ propNames $ \(propName, ref) => do
             addLines [<"    \{asIdrisPropName propName} : \{ref}"]
-    writeSchema name (JSEnum options) = do
+    writeSchemaConstraints name (JSEnum options) = do
         addLines [<"data \{name} = " ++ (concat $ intersperse " | " $ map ((name ++) . jsonAsName) options)]
-    writeSchema name (JSAnyOf schemas) = do
+    writeSchemaConstraints name (JSAnyOf schemas) = do
         variants <- for (genNames name schemas) $ \(name, schema) => do
             ref <- refSchema (name ++ "T") schema
             pure $ name ++ " " ++ ref
         addLines [<"data \{name} = " ++ (concat $ intersperse " | " variants)]
-    writeSchema name schema = do
-        ref <- refSchema name schema
+    writeSchemaConstraints name schema = do
+        ref <- refSchemaConstraints name schema
         addLines [<"\{name} : Type" , "\{name} = \{ref}"]
 
     ||| Get a potentially-anonymous reference to the type described by a schema
     ||| The type can use the given name to construct itself, if necessary
     refSchema : (name : String) -> JSONSchema -> Writer IdrisModule String
-    refSchema _ (JSAtom atomSchema) = pure $ asIdrisType atomSchema
-    refSchema name (JSArray itemSchema) = do
+    refSchema name (MkJSONSchema defs constraints) = do
+        for_ (SortedMap.toList defs) $ \(name, schema) => do
+            writeSchema (asIdrisTypeName name) schema
+            addLines [<""]
+        refSchemaConstraints name constraints
+
+    refSchemaConstraints : (name : String) -> JSONSchemaConstraints -> Writer IdrisModule String
+    refSchemaConstraints _ (JSAtom atomSchema) = pure $ asIdrisType atomSchema
+    refSchemaConstraints name (JSArray itemSchema) = do
         let itemName = name ++ "Item"
         ref <- refSchema itemName itemSchema
         pure $ "List \{ref}"
-    refSchema _ JSAny = do
+    refSchemaConstraints name (JSRef ref) = pure $ asIdrisTypeName $ last $ split (== '/') ref
+    refSchemaConstraints _ JSAny = do
         addImport "Language.JSON"
         pure "JSON"
-    refSchema name schema = do
-        writeSchema name schema
+    refSchemaConstraints name schema = do
+        writeSchemaConstraints name schema
         addLines [<""]
         pure name
 

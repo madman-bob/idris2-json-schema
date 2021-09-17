@@ -1,0 +1,13 @@
+$1 Defs.json
+cat Defs.idr
+
+rm Defs.idr
+
+echo "---"
+
+# Recognize "definitions" as well as "$defs"
+
+$1 Definitions.json
+cat Definitions.idr
+
+rm Definitions.idr

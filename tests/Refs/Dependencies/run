@@ -1,0 +1,11 @@
+$1 BasicDependencies.json
+cat BasicDependencies.idr
+
+rm BasicDependencies.idr
+
+echo "---"
+
+$1 CircularDependencies.json
+cat CircularDependencies.idr
+
+rm CircularDependencies.idr

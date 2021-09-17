@@ -1,8 +1,8 @@
 module JSONSchema.Data
 
-import public Data.SortedMap
-
 import Language.JSON
+
+import public Libraries.Data.SortedMap
 
 public export
 data JSONAtomSchema = JSNull

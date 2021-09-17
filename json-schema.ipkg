@@ -2,7 +2,7 @@ package json-schema
 
 sourcedir = "JSONSchema"
 
-depends = contrib
+depends = contrib, idris2
 
 modules =
     JSONSchema,
@@ -12,7 +12,8 @@ modules =
     JSONSchema.JSONUtils,
     JSONSchema.Parser,
     JSONSchema.Parser.Error,
-    JSONSchema.StringUtils
+    JSONSchema.StringUtils,
+    JSONSchema.TopoSort
 
 main = JSONSchema
 executable = json-schema

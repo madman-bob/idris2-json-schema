@@ -1,0 +1,22 @@
+Title : Type
+Title = String
+
+Year : Type
+Year = Double
+
+record Film where
+    constructor MkFilm
+    title : Title
+    year : Year
+
+Main : Type
+Main = List Film
+---
+mutual
+    data Even = Even0 () | Even1 Odd
+
+    Odd : Type
+    Odd = Even
+
+Main : Type
+Main = Even

@@ -1,0 +1,18 @@
+{
+  "$ref": "#/$defs/even",
+  "$defs": {
+    "even": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/odd"
+        }
+      ]
+    },
+    "odd": {
+      "$ref": "#/$defs/even"
+    }
+  }
+}

@@ -9,6 +9,7 @@ import Language.JSON
 import JSONSchema.Compiler.Data
 import JSONSchema.Data
 import JSONSchema.StringUtils
+import JSONSchema.TopoSort
 
 ||| Convert a JSON property identifier to a valid Idris type identifier
 asIdrisTypeName : String -> String
@@ -41,12 +42,20 @@ genNames parentName xs = map (\(n, x) => (parentName ++ show n, x)) $ enum 0 xs
     enum n [] = []
     enum n (x :: xs) = (n, x) :: enum (S n) xs
 
+jsonShortName : String -> String
+jsonShortName = last . split (== '/')
+
+support : JSONSchema -> SortedSet String
+support (MkJSONSchema _ (JSObject props)) = foldr union empty $ map (\(MkJSONPropertySchema _ propSchema) => support propSchema) props
+support (MkJSONSchema _ (JSArray itemSchema)) = support itemSchema
+support (MkJSONSchema _ (JSRef ref)) = singleton $ jsonShortName ref
+support (MkJSONSchema _ (JSAnyOf schemas)) = foldr union empty (map support schemas)
+support (MkJSONSchema _ _) = empty
+
 mutual
     writeSchema : (name : String) -> JSONSchema -> Writer IdrisModule ()
     writeSchema name (MkJSONSchema defs constraints) = do
-        for_ (SortedMap.toList defs) $ \(name, schema) => do
-            writeSchema (asIdrisTypeName name) schema
-            addLines [<""]
+        writeDefs defs
         writeSchemaConstraints name constraints
 
     writeSchemaConstraints : (name : String) -> JSONSchemaConstraints -> Writer IdrisModule ()
@@ -76,9 +85,7 @@ mutual
              -> {default False asSubexpression : Bool}
              -> Writer IdrisModule String
     refSchema name (MkJSONSchema defs constraints) = do
-        for_ (SortedMap.toList defs) $ \(name, schema) => do
-            writeSchema (asIdrisTypeName name) schema
-            addLines [<""]
+        writeDefs defs
         refSchemaConstraints name constraints {asSubexpression}
 
     refSchemaConstraints : (name : String)
@@ -92,7 +99,7 @@ mutual
         if asSubexpression
             then pure $ "(List \{ref})"
             else pure $ "List \{ref}"
-    refSchemaConstraints name (JSRef ref) = pure $ asIdrisTypeName $ last $ split (== '/') ref
+    refSchemaConstraints name (JSRef ref) = pure $ asIdrisTypeName $ jsonShortName ref
     refSchemaConstraints _ JSAny = do
         addImport "Language.JSON"
         pure "JSON"
@@ -100,6 +107,20 @@ mutual
         writeSchemaConstraints name schema
         addLines [<""]
         pure name
+
+    writeDefs : SortedMap String JSONSchema -> Writer IdrisModule ()
+    writeDefs defs = do
+        let deps = map support defs
+        for_ (topoSort deps) $ \case
+            name ::: [] => writeDef name
+            names => mutualBlock $ traverse_ writeDef names
+      where
+        writeDef : (shortName : String) -> Writer IdrisModule ()
+        writeDef shortName = case lookup shortName defs of
+            Nothing => pure ()
+            Just schema => do
+                writeSchema (asIdrisTypeName shortName) schema
+                addLines [<""]
 
 export
 compileSchema : JSONSchema -> List String

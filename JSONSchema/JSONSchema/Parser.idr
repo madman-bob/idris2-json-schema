@@ -1,8 +1,8 @@
 module JSONSchema.Parser
 
-import Data.SortedMap
-
 import Language.JSON
+
+import Libraries.Data.SortedMap
 
 import JSONSchema.Data
 import JSONSchema.Parser.Error

@@ -62,7 +62,7 @@ mutual
         addLines [<"data \{name} = " ++ (concat $ intersperse " | " $ map ((name ++) . jsonAsName) options)]
     writeSchemaConstraints name (JSAnyOf schemas) = do
         variants <- for (genNames name schemas) $ \(name, schema) => do
-            ref <- refSchema (name ++ "T") schema
+            ref <- refSchema (name ++ "T") schema {asSubexpression = True}
             pure $ name ++ " " ++ ref
         addLines [<"data \{name} = " ++ (concat $ intersperse " | " variants)]
     writeSchemaConstraints name schema = do
@@ -71,19 +71,27 @@ mutual
 
     ||| Get a potentially-anonymous reference to the type described by a schema
     ||| The type can use the given name to construct itself, if necessary
-    refSchema : (name : String) -> JSONSchema -> Writer IdrisModule String
+    refSchema : (name : String)
+             -> JSONSchema
+             -> {default False asSubexpression : Bool}
+             -> Writer IdrisModule String
     refSchema name (MkJSONSchema defs constraints) = do
         for_ (SortedMap.toList defs) $ \(name, schema) => do
             writeSchema (asIdrisTypeName name) schema
             addLines [<""]
-        refSchemaConstraints name constraints
+        refSchemaConstraints name constraints {asSubexpression}
 
-    refSchemaConstraints : (name : String) -> JSONSchemaConstraints -> Writer IdrisModule String
+    refSchemaConstraints : (name : String)
+                        -> JSONSchemaConstraints
+                        -> {default False asSubexpression : Bool}
+                        -> Writer IdrisModule String
     refSchemaConstraints _ (JSAtom atomSchema) = pure $ asIdrisType atomSchema
     refSchemaConstraints name (JSArray itemSchema) = do
         let itemName = name ++ "Item"
-        ref <- refSchema itemName itemSchema
-        pure $ "List \{ref}"
+        ref <- refSchema itemName itemSchema {asSubexpression = True}
+        if asSubexpression
+            then pure $ "(List \{ref})"
+            else pure $ "List \{ref}"
     refSchemaConstraints name (JSRef ref) = pure $ asIdrisTypeName $ last $ split (== '/') ref
     refSchemaConstraints _ JSAny = do
         addImport "Language.JSON"

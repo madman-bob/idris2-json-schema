@@ -9,7 +9,7 @@ primitiveTests = MkTestPool "Primitive" [] Nothing [
 
 composeTests : TestPool
 composeTests = MkTestPool "Compose" [] Nothing [
-    "Any", "AnyOf", "Enum"
+    "Any", "AnyOf", "Brackets", "Enum"
   ]
 
 refTests : TestPool

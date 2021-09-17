@@ -1,0 +1,4 @@
+$1 Brackets.json
+cat Brackets.idr
+
+rm Brackets.idr

@@ -1,0 +1,57 @@
+Delay_ : Type
+Delay_ = String
+
+Force_ : Type
+Force_ = String
+
+Inf_ : Type
+Inf_ = String
+
+Lazy_ : Type
+Lazy_ = String
+
+record ReservedProperties where
+    constructor MkReservedProperties
+    auto_ : String
+    case_ : String
+    covering_ : String
+    data_ : String
+    default_ : String
+    do_ : String
+    else_ : String
+    export_ : String
+    forall_ : String
+    if_ : String
+    implementation_ : String
+    implicit_ : String
+    import_ : String
+    impossible_ : String
+    in_ : String
+    infix_ : String
+    infixl_ : String
+    infixr_ : String
+    interface_ : String
+    let_ : String
+    module_ : String
+    mutual_ : String
+    namespace_ : String
+    of_ : String
+    open_ : String
+    parameters_ : String
+    partial_ : String
+    prefix_ : String
+    private_ : String
+    proof_ : String
+    public_ : String
+    record_ : String
+    rewrite_ : String
+    then_ : String
+    total_ : String
+    using_ : String
+    where_ : String
+    with_ : String
+
+Type_ : Type
+Type_ = String
+
+data Main = Main0 Delay_ | Main1 Force_ | Main2 Inf_ | Main3 Lazy_ | Main4 Type_ | Main5 ReservedProperties

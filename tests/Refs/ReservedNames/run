@@ -1,0 +1,4 @@
+$1 ReservedNames.json
+cat ReservedNames.idr
+
+rm ReservedNames.idr

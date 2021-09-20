@@ -1,0 +1,158 @@
+{
+  "anyOf": [
+    {
+      "$ref": "#/$defs/delay"
+    },
+    {
+      "$ref": "#/$defs/force"
+    },
+    {
+      "$ref": "#/$defs/inf"
+    },
+    {
+      "$ref": "#/$defs/lazy"
+    },
+    {
+      "$ref": "#/$defs/type"
+    },
+    {
+      "$ref": "#/$defs/reservedProperties"
+    }
+  ],
+  "$defs": {
+    "delay": {
+      "type": "string"
+    },
+    "force": {
+      "type": "string"
+    },
+    "inf": {
+      "type": "string"
+    },
+    "lazy": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "reservedProperties": {
+      "type": "object",
+      "properties": {
+        "auto": {
+          "type": "string"
+        },
+        "case": {
+          "type": "string"
+        },
+        "covering": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string"
+        },
+        "default": {
+          "type": "string"
+        },
+        "do": {
+          "type": "string"
+        },
+        "else": {
+          "type": "string"
+        },
+        "export": {
+          "type": "string"
+        },
+        "forall": {
+          "type": "string"
+        },
+        "if": {
+          "type": "string"
+        },
+        "implementation": {
+          "type": "string"
+        },
+        "implicit": {
+          "type": "string"
+        },
+        "import": {
+          "type": "string"
+        },
+        "impossible": {
+          "type": "string"
+        },
+        "in": {
+          "type": "string"
+        },
+        "infix": {
+          "type": "string"
+        },
+        "infixl": {
+          "type": "string"
+        },
+        "infixr": {
+          "type": "string"
+        },
+        "interface": {
+          "type": "string"
+        },
+        "let": {
+          "type": "string"
+        },
+        "module": {
+          "type": "string"
+        },
+        "mutual": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "of": {
+          "type": "string"
+        },
+        "open": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "string"
+        },
+        "partial": {
+          "type": "string"
+        },
+        "prefix": {
+          "type": "string"
+        },
+        "private": {
+          "type": "string"
+        },
+        "proof": {
+          "type": "string"
+        },
+        "public": {
+          "type": "string"
+        },
+        "record": {
+          "type": "string"
+        },
+        "rewrite": {
+          "type": "string"
+        },
+        "then": {
+          "type": "string"
+        },
+        "total": {
+          "type": "string"
+        },
+        "using": {
+          "type": "string"
+        },
+        "where": {
+          "type": "string"
+        },
+        "with": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

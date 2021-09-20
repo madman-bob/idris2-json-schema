@@ -11,13 +11,27 @@ import JSONSchema.Data
 import JSONSchema.StringUtils
 import JSONSchema.TopoSort
 
+idrisReservedNamesUpper : List String
+idrisReservedNamesUpper = ["Delay", "Force", "Inf", "Lazy", "Type"]
+
+idrisReservedNamesLower : List String
+idrisReservedNamesLower = ["auto", "case", "covering", "data", "default", "do", "else", "export", "forall", "if", "implementation", "implicit", "import", "impossible", "in", "infix", "infixl", "infixr", "interface", "let", "module", "mutual", "namespace", "of", "open", "parameters", "partial", "prefix", "private", "proof", "public", "record", "rewrite", "then", "total", "using", "where", "with"]
+
 ||| Convert a JSON property identifier to a valid Idris type identifier
 asIdrisTypeName : String -> String
-asIdrisTypeName name = filter isAlphaNum $ title name
+asIdrisTypeName name =
+    let n = filter isAlphaNum $ title name in
+    if elem n idrisReservedNamesUpper
+        then n ++ "_"
+        else n
 
 ||| Convert a JSON property identifier to a valid Idris property identifier
 asIdrisPropName : String -> String
-asIdrisPropName name = camelCase $ asIdrisTypeName name
+asIdrisPropName name =
+    let n = filter isAlphaNum $ camelCase name in
+    if elem n idrisReservedNamesLower
+        then n ++ "_"
+        else n
 
 asIdrisType : JSONAtomSchema -> String
 asIdrisType JSNull = "()"

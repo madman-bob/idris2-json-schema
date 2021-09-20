@@ -34,14 +34,23 @@ export
 mapLines : (String -> String) -> Writer IdrisModule a -> Writer IdrisModule a
 mapLines f = mapWriter $ \(x, MkIdrisModule imports lines) => (x, MkIdrisModule imports (map f lines))
 
+indentLine : String -> String
+indentLine "" = ""
+indentLine line = "    " ++ line
+
 export
 indent : Writer IdrisModule a -> Writer IdrisModule a
-indent = mapLines $ \case
-    "" => ""
-    line => "    " ++ line
+indent = mapLines indentLine
 
 export
 mutualBlock : Writer IdrisModule a -> Writer IdrisModule a
 mutualBlock writer = do
     addLines [<"mutual"]
     indent writer
+
+export
+namespaceBlock : String -> Writer IdrisModule a -> Writer IdrisModule a
+namespaceBlock name =
+    mapWriter $ \case
+        (x, MkIdrisModule imports [<]) => (x, MkIdrisModule imports [<])
+        (x, MkIdrisModule imports lines) => (x, MkIdrisModule imports ([<"namespace \{name}"] ++ map indentLine lines))

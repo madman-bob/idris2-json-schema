@@ -60,9 +60,8 @@ mutual
 
     writeSchemaConstraints : (name : String) -> JSONSchemaConstraints -> Writer IdrisModule ()
     writeSchemaConstraints name (JSObject props) = do
-        propNames <- for props $ \(MkJSONPropertySchema propName propSchema) => do
-            let typeName = name ++ asIdrisTypeName propName
-            ref <- refSchema typeName propSchema
+        propNames <- namespaceBlock name $ for props $ \(MkJSONPropertySchema propName propSchema) => do
+            ref <- refSchema (asIdrisTypeName propName) propSchema
             pure (propName, ref)
         addLines [<"record \{name} where" , "    constructor Mk\{name}"]
         for_ propNames $ \(propName, ref) => do
@@ -70,7 +69,7 @@ mutual
     writeSchemaConstraints name (JSEnum options) = do
         addLines [<"data \{name} = " ++ (concat $ intersperse " | " $ map ((name ++) . jsonAsName) options)]
     writeSchemaConstraints name (JSAnyOf schemas) = do
-        variants <- for (genNames name schemas) $ \(name, schema) => do
+        variants <- namespaceBlock name $ for (genNames name schemas) $ \(name, schema) => do
             ref <- refSchema (name ++ "T") schema {asSubexpression = True}
             pure $ name ++ " " ++ ref
         addLines [<"data \{name} = " ++ (concat $ intersperse " | " variants)]
@@ -95,7 +94,7 @@ mutual
     refSchemaConstraints _ (JSAtom atomSchema) = pure $ asIdrisType atomSchema
     refSchemaConstraints name (JSArray itemSchema) = do
         let itemName = name ++ "Item"
-        ref <- refSchema itemName itemSchema {asSubexpression = True}
+        ref <- namespaceBlock name $ refSchema itemName itemSchema {asSubexpression = True}
         if asSubexpression
             then pure $ "(List \{ref})"
             else pure $ "List \{ref}"

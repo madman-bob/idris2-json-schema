@@ -1,13 +1,14 @@
-record MainAddress where
-    constructor MkMainAddress
-    streetAddress : String
-    city : String
-    state : String
-    country : String
+namespace Main
+    record Address where
+        constructor MkAddress
+        streetAddress : String
+        city : String
+        state : String
+        country : String
 
 record Main where
     constructor MkMain
     firstName : String
     lastName : String
     birthday : String
-    address : MainAddress
+    address : Address

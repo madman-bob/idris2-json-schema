@@ -1,3 +1,4 @@
+1/1: Building BasicDependencies (BasicDependencies.idr)
 public export
 Title : Type
 Title = String
@@ -16,6 +17,7 @@ public export
 Main : Type
 Main = List Main.Film
 ---
+1/1: Building CircularDependencies (CircularDependencies.idr)
 mutual
     public export
     data Even = Even0 () | Even1 Main.Odd

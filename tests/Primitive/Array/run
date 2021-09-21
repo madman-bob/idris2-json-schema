@@ -1,4 +1,3 @@
-$1 Array.json
-cat Array.idr
+. ../../testutils.sh
 
-rm Array.idr
+basicTest Array

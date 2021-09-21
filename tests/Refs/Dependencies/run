@@ -1,11 +1,7 @@
-$1 BasicDependencies.json
-cat BasicDependencies.idr
+. ../../testutils.sh
 
-rm BasicDependencies.idr
+basicTest BasicDependencies
 
 echo "---"
 
-$1 CircularDependencies.json
-cat CircularDependencies.idr
-
-rm CircularDependencies.idr
+basicTest CircularDependencies

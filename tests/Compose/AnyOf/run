@@ -1,11 +1,7 @@
-$1 AnyOf.json
-cat AnyOf.idr
+. ../../testutils.sh
 
-rm AnyOf.idr
+basicTest AnyOf
 
 echo "---"
 
-$1 NestedAnyOf.json
-cat NestedAnyOf.idr
-
-rm NestedAnyOf.idr
+basicTest NestedAnyOf

@@ -1,4 +1,3 @@
-$1 Enum.json
-cat Enum.idr
+. ../../testutils.sh
 
-rm Enum.idr
+basicTest Enum

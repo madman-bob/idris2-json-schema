@@ -1,0 +1,24 @@
+{
+  "anyOf": [
+    {
+      "anyOf": [
+        {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        {
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "type": "number"
+    }
+  ]
+}

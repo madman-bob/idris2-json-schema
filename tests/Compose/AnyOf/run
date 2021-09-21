@@ -2,3 +2,10 @@ $1 AnyOf.json
 cat AnyOf.idr
 
 rm AnyOf.idr
+
+echo "---"
+
+$1 NestedAnyOf.json
+cat NestedAnyOf.idr
+
+rm NestedAnyOf.idr

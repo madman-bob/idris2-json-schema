@@ -1,2 +1,13 @@
 public export
 data Main = Main0 String | Main1 Double
+---
+namespace Main
+    namespace Main0T
+        public export
+        data Main0T0T = Main0T0T0 String | Main0T0T1 ()
+
+    public export
+    data Main0T = Main0T0 Main.Main.Main0T.Main0T0T | Main0T1 Bool
+
+public export
+data Main = Main0 Main.Main.Main0T | Main1 Double

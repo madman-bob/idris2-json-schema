@@ -1,1 +1,1 @@
-data Main = MainNull | MainFalse | MainObject_key_Value | MainArray_Lorem_Ipsum | Main1 | MainHelloWorld
+data Main = MainNull | MainFalse | MainObject_Key_Value | MainArray_Lorem_Ipsum | Main1 | MainHelloWorld

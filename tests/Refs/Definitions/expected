@@ -4,7 +4,7 @@ record Film where
     year : Double
 
 Main : Type
-Main = List Film
+Main = List Main.Film
 ---
 record Film where
     constructor MkFilm
@@ -12,4 +12,4 @@ record Film where
     year : Double
 
 Main : Type
-Main = List Film
+Main = List Main.Film

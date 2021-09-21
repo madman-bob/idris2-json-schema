@@ -54,4 +54,4 @@ record ReservedProperties where
 Type_ : Type
 Type_ = String
 
-data Main = Main0 Delay_ | Main1 Force_ | Main2 Inf_ | Main3 Lazy_ | Main4 Type_ | Main5 ReservedProperties
+data Main = Main0 Main.Delay_ | Main1 Main.Force_ | Main2 Main.Inf_ | Main3 Main.Lazy_ | Main4 Main.Type_ | Main5 Main.ReservedProperties

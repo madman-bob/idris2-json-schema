@@ -8,4 +8,4 @@ namespace Main
         vinylAvailable : ()
 
 Main : Type
-Main = List MainItem
+Main = List Main.Main.MainItem

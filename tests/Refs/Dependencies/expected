@@ -6,17 +6,17 @@ Year = Double
 
 record Film where
     constructor MkFilm
-    title : Title
-    year : Year
+    title : Main.Title
+    year : Main.Year
 
 Main : Type
-Main = List Film
+Main = List Main.Film
 ---
 mutual
-    data Even = Even0 () | Even1 Odd
+    data Even = Even0 () | Even1 Main.Odd
 
     Odd : Type
-    Odd = Even
+    Odd = Main.Even
 
 Main : Type
-Main = Even
+Main = Main.Even

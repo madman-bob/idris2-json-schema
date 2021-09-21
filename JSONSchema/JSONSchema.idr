@@ -8,6 +8,7 @@ import Language.JSON
 
 import JSONSchema.Compiler
 import public JSONSchema.Data as JSONSchema
+import public JSONSchema.Names as JSONSchema
 import public JSONSchema.Parser as JSONSchema
 
 main : IO ()

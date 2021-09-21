@@ -11,4 +11,4 @@ record Main where
     firstName : String
     lastName : String
     birthday : String
-    address : Address
+    address : Main.Main.Address

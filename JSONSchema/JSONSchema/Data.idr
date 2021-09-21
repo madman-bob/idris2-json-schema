@@ -12,22 +12,22 @@ data JSONAtomSchema = JSNull
 
 mutual
     public export
-    record JSONSchema where
+    record JSONSchema (ref : Type) where
         constructor MkJSONSchema
-        defs : SortedMap String JSONSchema
-        constraints : JSONSchemaConstraints
+        defs : SortedMap ref (JSONSchema ref)
+        constraints : JSONSchemaConstraints ref
 
     public export
-    data JSONSchemaConstraints = JSAtom JSONAtomSchema
-                               | JSObject (List JSONPropertySchema)
-                               | JSArray JSONSchema
-                               | JSEnum (List JSON)
-                               | JSRef String
-                               | JSAnyOf (List JSONSchema)
-                               | JSAny
+    data JSONSchemaConstraints ref = JSAtom JSONAtomSchema
+                                   | JSObject (List (JSONPropertySchema ref))
+                                   | JSArray (JSONSchema ref)
+                                   | JSEnum (List JSON)
+                                   | JSRef ref
+                                   | JSAnyOf (List (JSONSchema ref))
+                                   | JSAny
 
     public export
-    record JSONPropertySchema where
+    record JSONPropertySchema (ref : Type) where
         constructor MkJSONPropertySchema
         name : String
-        valueSchema : JSONSchema
+        valueSchema : JSONSchema ref

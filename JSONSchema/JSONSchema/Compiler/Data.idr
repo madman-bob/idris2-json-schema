@@ -6,6 +6,8 @@ import public Data.SnocList
 
 import public Libraries.Data.SortedSet
 
+import JSONSchema.Names
+
 %default total
 
 public export
@@ -49,8 +51,8 @@ mutualBlock writer = do
     indent writer
 
 export
-namespaceBlock : String -> Writer IdrisModule a -> Writer IdrisModule a
+namespaceBlock : TypeName -> Writer IdrisModule a -> Writer IdrisModule a
 namespaceBlock name =
     mapWriter $ \case
         (x, MkIdrisModule imports [<]) => (x, MkIdrisModule imports [<])
-        (x, MkIdrisModule imports lines) => (x, MkIdrisModule imports ([<"namespace \{name}"] ++ map indentLine lines))
+        (x, MkIdrisModule imports lines) => (x, MkIdrisModule imports ([<"namespace \{show name}"] ++ map indentLine lines))

@@ -1,4 +1,5 @@
 namespace Main
+    public export
     record MainItem where
         constructor MkMainItem
         title : String
@@ -7,5 +8,6 @@ namespace Main
         dvdAvailable : Bool
         vinylAvailable : ()
 
+public export
 Main : Type
 Main = List Main.Main.MainItem

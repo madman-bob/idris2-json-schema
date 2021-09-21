@@ -35,19 +35,33 @@ mutual
         propNames <- namespaceBlock (shortName name) $ for props $ \(MkJSONPropertySchema propName propSchema) => do
             ref <- refSchema (name <.> asIdrisTypeName propName) propSchema
             pure (propName, ref)
-        addLines [<"record \{show $ shortName name} where" , "    constructor \{show $ constructorName $ shortName name}"]
+        addLines [<
+            "public export",
+            "record \{show $ shortName name} where" ,
+            "    constructor \{show $ constructorName $ shortName name}"
+          ]
         for_ propNames $ \(propName, ref) => do
             addLines [<"    \{show $ asIdrisPropName propName} : \{ref}"]
     writeSchemaConstraints name (JSEnum options) = do
-        addLines [<"data \{show $ shortName name} = " ++ (concat $ intersperse " | " $ map show $ constructorNames (shortName name) $ map jsonAsName options)]
+        addLines [<
+            "public export",
+            "data \{show $ shortName name} = " ++ (concat $ intersperse " | " $ map show $ constructorNames (shortName name) $ map jsonAsName options)
+          ]
     writeSchemaConstraints name (JSAnyOf schemas) = do
         variants <- namespaceBlock (shortName name) $ for (genNames (shortName name) schemas) $ \(conName, typeName, schema) => do
             ref <- refSchema (name <.> typeName) schema {asSubexpression = True}
             pure $ show conName ++ " " ++ ref
-        addLines [<"data \{show $ shortName name} = " ++ (concat $ intersperse " | " variants)]
+        addLines [<
+            "public export",
+            "data \{show $ shortName name} = " ++ (concat $ intersperse " | " variants)
+          ]
     writeSchemaConstraints name schema = do
         ref <- refSchemaConstraints name schema
-        addLines [<"\{show $ shortName name} : Type" , "\{show $ shortName name} = \{ref}"]
+        addLines [<
+            "public export",
+            "\{show $ shortName name} : Type" ,
+            "\{show $ shortName name} = \{ref}"
+          ]
 
     ||| Get a potentially-anonymous reference to the type described by a schema
     ||| The type can use the given name to construct itself, if necessary

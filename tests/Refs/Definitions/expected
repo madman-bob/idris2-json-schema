@@ -1,15 +1,19 @@
+public export
 record Film where
     constructor MkFilm
     title : String
     year : Double
 
+public export
 Main : Type
 Main = List Main.Film
 ---
+public export
 record Film where
     constructor MkFilm
     title : String
     year : Double
 
+public export
 Main : Type
 Main = List Main.Film

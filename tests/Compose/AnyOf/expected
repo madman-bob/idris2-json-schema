@@ -1,1 +1,2 @@
+public export
 data Main = Main0 String | Main1 Double

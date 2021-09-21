@@ -1,22 +1,29 @@
+public export
 Title : Type
 Title = String
 
+public export
 Year : Type
 Year = Double
 
+public export
 record Film where
     constructor MkFilm
     title : Main.Title
     year : Main.Year
 
+public export
 Main : Type
 Main = List Main.Film
 ---
 mutual
+    public export
     data Even = Even0 () | Even1 Main.Odd
 
+    public export
     Odd : Type
     Odd = Main.Even
 
+public export
 Main : Type
 Main = Main.Even

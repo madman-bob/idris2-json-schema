@@ -1,1 +1,2 @@
+public export
 data Main = Main0 (List (List Double)) | Main1 Double

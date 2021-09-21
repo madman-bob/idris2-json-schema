@@ -1,9 +1,11 @@
 import Language.JSON
 
+public export
 Main : Type
 Main = JSON
 ---
 import Language.JSON
 
+public export
 Main : Type
 Main = JSON

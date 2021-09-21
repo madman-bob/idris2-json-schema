@@ -1,15 +1,20 @@
+public export
 Delay_ : Type
 Delay_ = String
 
+public export
 Force_ : Type
 Force_ = String
 
+public export
 Inf_ : Type
 Inf_ = String
 
+public export
 Lazy_ : Type
 Lazy_ = String
 
+public export
 record ReservedProperties where
     constructor MkReservedProperties
     auto_ : String
@@ -51,7 +56,9 @@ record ReservedProperties where
     where_ : String
     with_ : String
 
+public export
 Type_ : Type
 Type_ = String
 
+public export
 data Main = Main0 Main.Delay_ | Main1 Main.Force_ | Main2 Main.Inf_ | Main3 Main.Lazy_ | Main4 Main.Type_ | Main5 Main.ReservedProperties

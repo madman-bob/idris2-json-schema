@@ -1,0 +1,10 @@
+1/1: Building AwkwardNames (AwkwardNames.idr)
+public export
+data X = X_0 Double | X_1 String | X_2 ()
+
+public export
+X2 : Type
+X2 = ()
+
+public export
+data Main = Main_0 Main.X | Main_1 Main.X2

@@ -79,8 +79,11 @@ constructorNames (MkTypeName name) = map $ \(MkTypeName variant) => MkConstructo
 ||| Generate constructor and type names for anonymous variants of a type
 export
 genNames : TypeName -> List a -> List (ConstructorName, TypeName, a)
-genNames (MkTypeName name) xs = map (\(n, x) => (MkConstructorName $ name ++ show n, MkTypeName $ name ++ show n ++ "T", x)) $ enum 0 xs
+genNames (MkTypeName name) xs = map (\(n, x) => (MkConstructorName $ nth name n, MkTypeName $ nth name n ++ "T", x)) $ enum 0 xs
   where
     enum : Nat -> List a -> List (Nat, a)
     enum n [] = []
     enum n (x :: xs) = (n, x) :: enum (S n) xs
+
+    nth : String -> Nat -> String
+    nth name n = name ++ "_" ++ show n

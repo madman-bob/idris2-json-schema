@@ -1,15 +1,15 @@
 1/1: Building AnyOf (AnyOf.idr)
 public export
-data Main = Main0 String | Main1 Double
+data Main = Main_0 String | Main_1 Double
 ---
 1/1: Building NestedAnyOf (NestedAnyOf.idr)
 namespace Main
-    namespace Main0T
+    namespace Main_0T
         public export
-        data Main0T0T = Main0T0T0 String | Main0T0T1 ()
+        data Main_0T_0T = Main_0T_0T_0 String | Main_0T_0T_1 ()
 
     public export
-    data Main0T = Main0T0 Main.Main.Main0T.Main0T0T | Main0T1 Bool
+    data Main_0T = Main_0T_0 Main.Main.Main_0T.Main_0T_0T | Main_0T_1 Bool
 
 public export
-data Main = Main0 Main.Main.Main0T | Main1 Double
+data Main = Main_0 Main.Main.Main_0T | Main_1 Double

@@ -2,12 +2,12 @@
 mutual
     namespace Nat
         public export
-        record Nat1T where
-            constructor MkNat1T
+        record Nat_1T where
+            constructor MkNat_1T
             s : Main.Nat
 
     public export
-    data Nat = Nat0 () | Nat1 Main.Nat.Nat1T
+    data Nat = Nat_0 () | Nat_1 Main.Nat.Nat_1T
 
 public export
 Main : Type

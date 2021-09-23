@@ -14,7 +14,7 @@ composeTests = MkTestPool "Compose" [] Nothing [
 
 refTests : TestPool
 refTests = MkTestPool "Ref" [] Nothing [
-    "CircularDefinitions", "Definitions", "Dependencies", "ReservedNames"
+    "AwkwardNames", "CircularDefinitions", "Definitions", "Dependencies", "ReservedNames"
   ]
 
 main : IO ()

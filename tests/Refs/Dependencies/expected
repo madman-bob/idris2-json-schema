@@ -20,7 +20,7 @@ Main = List Main.Film
 1/1: Building CircularDependencies (CircularDependencies.idr)
 mutual
     public export
-    data Even = Even0 () | Even1 Main.Odd
+    data Even = Even_0 () | Even_1 Main.Odd
 
     public export
     Odd : Type

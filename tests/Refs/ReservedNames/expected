@@ -62,4 +62,4 @@ Type_ : Type
 Type_ = String
 
 public export
-data Main = Main0 Main.Delay_ | Main1 Main.Force_ | Main2 Main.Inf_ | Main3 Main.Lazy_ | Main4 Main.Type_ | Main5 Main.ReservedProperties
+data Main = Main_0 Main.Delay_ | Main_1 Main.Force_ | Main_2 Main.Inf_ | Main_3 Main.Lazy_ | Main_4 Main.Type_ | Main_5 Main.ReservedProperties

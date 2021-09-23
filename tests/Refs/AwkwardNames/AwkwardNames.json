@@ -1,0 +1,28 @@
+{
+  "anyOf": [
+    {
+      "$ref": "#/$defs/x"
+    },
+    {
+      "$ref": "#/$defs/x2"
+    }
+  ],
+  "$defs": {
+    "x": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "x2": {
+      "type": "null"
+    }
+  }
+}

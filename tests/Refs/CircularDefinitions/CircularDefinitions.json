@@ -1,0 +1,20 @@
+{
+  "$ref": "#/$defs/nat",
+  "$defs": {
+    "nat": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "s": {
+              "$ref": "#/$defs/nat"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -97,7 +97,9 @@ mutual
     writeDefs defs = do
         let deps = map support defs
         for_ (topoSort deps) $ \case
-            name ::: [] => writeDef name
+            name ::: [] =>
+                let isCircularDef = maybe False (contains name) $ lookup name deps in
+                (ifThenElse isCircularDef mutualBlock id) $ writeDef name
             names => mutualBlock $ traverse_ writeDef names
       where
         writeDef : QTypeName -> Writer IdrisModule ()

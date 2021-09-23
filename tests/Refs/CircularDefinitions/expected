@@ -1,0 +1,14 @@
+1/1: Building CircularDefinitions (CircularDefinitions.idr)
+mutual
+    namespace Nat
+        public export
+        record Nat1T where
+            constructor MkNat1T
+            s : Main.Nat
+
+    public export
+    data Nat = Nat0 () | Nat1 Main.Nat.Nat1T
+
+public export
+Main : Type
+Main = Main.Nat

@@ -1,0 +1,9 @@
+json-schema  Generate Idris 2 data types from a JSON Schema
+             Usage: json-schema input-file.json
+  --help  Print this help text
+
+---
+json-schema  Generate Idris 2 data types from a JSON Schema
+             Usage: json-schema input-file.json
+  --help  Print this help text
+

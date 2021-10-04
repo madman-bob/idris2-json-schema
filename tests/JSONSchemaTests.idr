@@ -17,11 +17,17 @@ refTests = MkTestPool "Ref" [] Nothing [
     "AwkwardNames", "CircularDefinitions", "Definitions", "Dependencies", "ReservedNames"
   ]
 
+cliTests : TestPool
+cliTests = MkTestPool "CLI" [] Nothing [
+    "Help"
+  ]
+
 main : IO ()
 main = runner [
     testPaths "Primitive" primitiveTests,
     testPaths "Compose" composeTests,
-    testPaths "Refs" refTests
+    testPaths "Refs" refTests,
+    testPaths "CLI" cliTests
   ]
   where
     testPaths : String -> TestPool -> TestPool

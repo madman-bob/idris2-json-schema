@@ -2,7 +2,7 @@ package json-schema
 
 sourcedir = "JSONSchema"
 
-depends = contrib, idris2
+depends = contrib, idris2, collie
 
 modules =
     JSONSchema,

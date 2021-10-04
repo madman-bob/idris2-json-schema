@@ -6,26 +6,45 @@ import System.Path
 
 import Language.JSON
 
+import Collie
+
 import JSONSchema.Compiler
 import public JSONSchema.Data as JSONSchema
 import public JSONSchema.Names as JSONSchema
 import public JSONSchema.Parser as JSONSchema
 
+jsonSchema : Command "json-schema"
+jsonSchema = MkCommand {
+    description = """
+    Generate Idris 2 data types from a JSON Schema
+    Usage: json-schema input-file.json
+    """,
+    subcommands = [
+        "--help" ::= basic "Print this help text" none
+    ],
+    modifiers = [],
+    arguments = filePath
+  }
+
+printUsage : IO ()
+printUsage = putStrLn jsonSchema.usage
+
 main : IO ()
-main = do
-    [_, file] <- getArgs
-        | _ => putStrLn "Usage: json-schema input-file.json"
+main = jsonSchema.handleWith $ [\case
+    MkParsedCommand _ Nothing => printUsage
+    MkParsedCommand (MkRecord []) (Just file) => do
+        Right jsonStr <- readFile file
+            | Left err => printLn err
 
-    Right jsonStr <- readFile file
-        | Left err => printLn err
+        let Just json = JSON.parse jsonStr
+            | Nothing => putStrLn "Malformed JSON"
 
-    let Just json = JSON.parse jsonStr
-        | Nothing => putStrLn "Malformed JSON"
+        let Just schema = JSONSchema.parse json
+            | Nothing => putStrLn "Malformed JSON Schema"
 
-    let Just schema = JSONSchema.parse json
-        | Nothing => putStrLn "Malformed JSON Schema"
+        Right () <- writeFile (file <.> "idr") (concat $ map (++ "\n") $ compileSchema schema)
+            | Left err => printLn err
 
-    Right () <- writeFile (file <.> "idr") (concat $ map (++ "\n") $ compileSchema schema)
-        | Left err => printLn err
-
-    pure ()
+        pure (),
+    "--help" ::= [const printUsage]
+  ]

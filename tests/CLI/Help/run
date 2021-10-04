@@ -1,0 +1,7 @@
+. ../../testutils.sh
+
+$jsonSchema
+
+echo "---"
+
+$jsonSchema --help

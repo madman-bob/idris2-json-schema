@@ -31,3 +31,7 @@ mutual
         constructor MkJSONPropertySchema
         name : String
         valueSchema : JSONSchema ref
+
+export
+simpleSchema : Ord ref => JSONSchemaConstraints ref -> JSONSchema ref
+simpleSchema constraints = MkJSONSchema empty constraints

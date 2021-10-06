@@ -29,39 +29,39 @@ mutual
     writeSchema name (MkJSONSchema defs constraints) = do
         writeDefs defs
         writeSchemaConstraints name constraints
-
-    writeSchemaConstraints : QTypeName -> JSONSchemaConstraints QTypeName -> Writer IdrisModule ()
-    writeSchemaConstraints name (JSObject props) = do
-        propNames <- namespaceBlock (shortName name) $ for props $ \(MkJSONPropertySchema propName propSchema) => do
-            ref <- refSchema (name <.> asIdrisTypeName propName) propSchema
-            pure (propName, ref)
-        addLines [<
-            "public export",
-            "record \{show $ shortName name} where" ,
-            "    constructor \{show $ constructorName $ shortName name}"
-          ]
-        for_ propNames $ \(propName, ref) => do
-            addLines [<"    \{show $ asIdrisPropName propName} : \{ref}"]
-    writeSchemaConstraints name (JSEnum options) = do
-        addLines [<
-            "public export",
-            "data \{show $ shortName name} = " ++ (concat $ intersperse " | " $ map show $ constructorNames (shortName name) $ map jsonAsName options)
-          ]
-    writeSchemaConstraints name (JSAnyOf schemas) = do
-        variants <- namespaceBlock (shortName name) $ for (genNames (shortName name) schemas) $ \(conName, typeName, schema) => do
-            ref <- refSchema (name <.> typeName) schema {asSubexpression = True}
-            pure $ show conName ++ " " ++ ref
-        addLines [<
-            "public export",
-            "data \{show $ shortName name} = " ++ (concat $ intersperse " | " variants)
-          ]
-    writeSchemaConstraints name schema = do
-        ref <- refSchemaConstraints name schema
-        addLines [<
-            "public export",
-            "\{show $ shortName name} : Type" ,
-            "\{show $ shortName name} = \{ref}"
-          ]
+      where
+        writeSchemaConstraints : QTypeName -> JSONSchemaConstraints QTypeName -> Writer IdrisModule ()
+        writeSchemaConstraints name (JSObject props) = do
+            propNames <- namespaceBlock (shortName name) $ for props $ \(MkJSONPropertySchema propName propSchema) => do
+                ref <- refSchema (name <.> asIdrisTypeName propName) propSchema
+                pure (propName, ref)
+            addLines [<
+                "public export",
+                "record \{show $ shortName name} where" ,
+                "    constructor \{show $ constructorName $ shortName name}"
+              ]
+            for_ propNames $ \(propName, ref) => do
+                addLines [<"    \{show $ asIdrisPropName propName} : \{ref}"]
+        writeSchemaConstraints name (JSEnum options) = do
+            addLines [<
+                "public export",
+                "data \{show $ shortName name} = " ++ (concat $ intersperse " | " $ map show $ constructorNames (shortName name) $ map jsonAsName options)
+              ]
+        writeSchemaConstraints name (JSAnyOf schemas) = do
+            variants <- namespaceBlock (shortName name) $ for (genNames (shortName name) schemas) $ \(conName, typeName, schema) => do
+                ref <- refSchema (name <.> typeName) schema {asSubexpression = True}
+                pure $ show conName ++ " " ++ ref
+            addLines [<
+                "public export",
+                "data \{show $ shortName name} = " ++ (concat $ intersperse " | " variants)
+              ]
+        writeSchemaConstraints name schema = do
+            ref <- refSchema name (simpleSchema schema)
+            addLines [<
+                "public export",
+                "\{show $ shortName name} : Type" ,
+                "\{show $ shortName name} = \{ref}"
+              ]
 
     ||| Get a potentially-anonymous reference to the type described by a schema
     ||| The type can use the given name to construct itself, if necessary
@@ -72,26 +72,26 @@ mutual
     refSchema name (MkJSONSchema defs constraints) = do
         writeDefs defs
         refSchemaConstraints name constraints {asSubexpression}
-
-    refSchemaConstraints : QTypeName
-                        -> JSONSchemaConstraints QTypeName
-                        -> {default False asSubexpression : Bool}
-                        -> Writer IdrisModule String
-    refSchemaConstraints _ (JSAtom atomSchema) = pure $ asIdrisType atomSchema
-    refSchemaConstraints name (JSArray itemSchema) = do
-        let itemName = subName (shortName name) "Item"
-        ref <- namespaceBlock (shortName name) $ refSchema (name <.> itemName) itemSchema {asSubexpression = True}
-        if asSubexpression
-            then pure $ "(List \{ref})"
-            else pure $ "List \{ref}"
-    refSchemaConstraints name (JSRef ref) = pure $ show ref
-    refSchemaConstraints _ JSAny = do
-        addImport "Language.JSON"
-        pure "JSON"
-    refSchemaConstraints name schema = do
-        writeSchemaConstraints name schema
-        addLines [<""]
-        pure $ show name
+      where
+        refSchemaConstraints : QTypeName
+                            -> JSONSchemaConstraints QTypeName
+                            -> {default False asSubexpression : Bool}
+                            -> Writer IdrisModule String
+        refSchemaConstraints _ (JSAtom atomSchema) = pure $ asIdrisType atomSchema
+        refSchemaConstraints name (JSArray itemSchema) = do
+            let itemName = subName (shortName name) "Item"
+            ref <- namespaceBlock (shortName name) $ refSchema (name <.> itemName) itemSchema {asSubexpression = True}
+            if asSubexpression
+                then pure $ "(List \{ref})"
+                else pure $ "List \{ref}"
+        refSchemaConstraints name (JSRef ref) = pure $ show ref
+        refSchemaConstraints _ JSAny = do
+            addImport "Language.JSON"
+            pure "JSON"
+        refSchemaConstraints name schema = do
+            writeSchema name (simpleSchema schema)
+            addLines [<""]
+            pure $ show name
 
     writeDefs : SortedMap QTypeName (JSONSchema QTypeName) -> Writer IdrisModule ()
     writeDefs defs = do

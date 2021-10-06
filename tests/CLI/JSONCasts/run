@@ -1,0 +1,3 @@
+. ../../testutils.sh
+
+basicTest JSONCasts --json-casts

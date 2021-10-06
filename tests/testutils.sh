@@ -3,10 +3,13 @@
 jsonSchema=$1
 
 basicTest() {
-  $jsonSchema "$1.json"
-  idris2 -p contrib -c --no-color "$1.idr"
-  cat "$1.idr"
+  fileName=$1
+  shift
+
+  $jsonSchema "$fileName.json" "$@"
+  idris2 -p contrib -c --no-color "$fileName.idr"
+  cat "$fileName.idr"
 
   rm -rf build
-  rm "$1.idr"
+  rm "$fileName.idr"
 }

@@ -22,7 +22,9 @@ jsonSchema = MkCommand {
     subcommands = [
         "--help" ::= basic "Print this help text" none
     ],
-    modifiers = [],
+    modifiers = [
+        "--json-casts" ::= flag "Implement Cast interfaces to JSON for the generated data types"
+    ],
     arguments = filePath
   }
 
@@ -32,7 +34,9 @@ printUsage = putStrLn jsonSchema.usage
 main : IO ()
 main = jsonSchema.handleWith $ [\case
     MkParsedCommand _ Nothing => printUsage
-    MkParsedCommand (MkRecord []) (Just file) => do
+    MkParsedCommand (MkRecord [jsonCasts]) (Just file) => do
+        let compileOptions = MkCompileOptions jsonCasts
+
         Right jsonStr <- readFile file
             | Left err => printLn err
 

@@ -1,0 +1,70 @@
+{
+  "type": "array",
+  "items": {
+    "$ref": "#/$defs/film"
+  },
+  "$defs": {
+    "cast": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "film": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "year": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/year"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cast": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/cast"
+          }
+        },
+        "dvdAvailable": {
+          "type": "boolean"
+        },
+        "vinylAvailable": {
+          "type": "null"
+        },
+        "someEnum": {
+          "$ref": "#/$defs/someEnum"
+        }
+      }
+    },
+    "someEnum": {
+      "enum": [
+        null,
+        false,
+        {
+          "key": "value"
+        },
+        [
+          "Lorem",
+          "ipsum"
+        ],
+        1,
+        "Hello, world"
+      ]
+    },
+    "year": {
+      "type": "number"
+    }
+  }
+}

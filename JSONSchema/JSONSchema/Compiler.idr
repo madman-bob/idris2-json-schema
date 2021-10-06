@@ -6,7 +6,7 @@ import Data.String
 
 import Language.JSON
 
-import JSONSchema.Compiler.Data
+import public JSONSchema.Compiler.Data
 import JSONSchema.Data
 import JSONSchema.Names
 import JSONSchema.TopoSort
@@ -24,11 +24,49 @@ support (MkJSONSchema _ (JSRef ref)) = singleton ref
 support (MkJSONSchema _ (JSAnyOf schemas)) = foldr union empty (map support schemas)
 support (MkJSONSchema _ _) = empty
 
+writeCast : QTypeName -> JSONSchemaConstraints QTypeName -> Writer IdrisModule ()
+writeCast name constraints = do
+    addImport "Language.JSON"
+    let writeCastHeader = addLines [<
+        "",
+        "public export",
+        "Cast \{show name} JSON where"
+      ]
+    case constraints of
+        JSAtom _ => pure ()
+        JSObject props => do
+            let propNames = map (\(MkJSONPropertySchema propName _) => (propName, show $ asIdrisPropName propName)) props
+            writeCastHeader
+            addLines [< concat [
+                "    cast x = JObject [",
+                concat $ intersperse ", " $ map (\(n, i) => "(\{show n}, cast x.\{i})") propNames,
+                "]"
+              ]]
+        JSArray (MkJSONSchema _ itemConstraints) => pure ()
+        JSEnum options => do
+            let conNames = constructorNames (shortName name) $ map jsonAsName options
+            writeCastHeader
+            for_ (zip options conNames) $ \(option, conName) => do
+                addLines [<"    cast \{show conName} = \{show @{Idris} option}"]
+        JSRef _ => pure ()
+        JSAnyOf schemas => do
+            writeCastHeader
+            for_ (genNames (shortName name) schemas) $ \(conName, _, _) => do
+                addLines [<"    cast (\{show conName} x) = cast x"]
+        JSAny => pure ()
+
 mutual
-    writeSchema : QTypeName -> JSONSchema QTypeName -> Writer IdrisModule ()
+    writeSchema : (opts : CompileOptions)
+               => QTypeName
+               -> JSONSchema QTypeName
+               -> Writer IdrisModule ()
     writeSchema name (MkJSONSchema defs constraints) = do
         writeDefs defs
         writeSchemaConstraints name constraints
+
+        if opts.jsonCasts
+            then writeCast name constraints
+            else pure ()
       where
         writeSchemaConstraints : QTypeName -> JSONSchemaConstraints QTypeName -> Writer IdrisModule ()
         writeSchemaConstraints name (JSObject props) = do
@@ -65,7 +103,8 @@ mutual
 
     ||| Get a potentially-anonymous reference to the type described by a schema
     ||| The type can use the given name to construct itself, if necessary
-    refSchema : QTypeName
+    refSchema : CompileOptions
+             => QTypeName
              -> JSONSchema QTypeName
              -> {default False asSubexpression : Bool}
              -> Writer IdrisModule String
@@ -93,7 +132,9 @@ mutual
             addLines [<""]
             pure $ show name
 
-    writeDefs : SortedMap QTypeName (JSONSchema QTypeName) -> Writer IdrisModule ()
+    writeDefs : CompileOptions
+             => SortedMap QTypeName (JSONSchema QTypeName)
+             -> Writer IdrisModule ()
     writeDefs defs = do
         let deps = map support defs
         for_ (topoSort deps) $ \case
@@ -110,7 +151,7 @@ mutual
                 addLines [<""]
 
 export
-compileSchema : JSONSchema QTypeName -> List String
+compileSchema : CompileOptions => JSONSchema QTypeName -> List String
 compileSchema schema = cast {from = SnocList String} $ execWriter $ do
     let idrisModule = execWriter $ writeSchema (global "Main") schema
 

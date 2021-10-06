@@ -1,0 +1,59 @@
+1/1: Building JSONCasts (JSONCasts.idr)
+import Language.JSON
+
+namespace Cast
+    public export
+    record CastItem where
+        constructor MkCastItem
+        name : String
+
+    public export
+    Cast Main.Cast.CastItem JSON where
+        cast x = JObject [("name", cast x.name)]
+
+public export
+Cast : Type
+Cast = List Main.Cast.CastItem
+
+public export
+data SomeEnum = SomeEnumNull | SomeEnumFalse | SomeEnumObject_Key_Value | SomeEnumArray_Lorem_Ipsum | SomeEnum1 | SomeEnumHelloWorld
+
+public export
+Cast Main.SomeEnum JSON where
+    cast SomeEnumNull = JNull
+    cast SomeEnumFalse = JBoolean False
+    cast SomeEnumObject_Key_Value = JObject [("key", JString "value")]
+    cast SomeEnumArray_Lorem_Ipsum = JArray [JString "Lorem", JString "ipsum"]
+    cast SomeEnum1 = JNumber 1
+    cast SomeEnumHelloWorld = JString "Hello, world"
+
+public export
+Year : Type
+Year = Double
+
+namespace Film
+    public export
+    data Year = Year_0 Main.Year | Year_1 ()
+
+    public export
+    Cast Main.Film.Year JSON where
+        cast (Year_0 x) = cast x
+        cast (Year_1 x) = cast x
+
+public export
+record Film where
+    constructor MkFilm
+    title : String
+    year : Main.Film.Year
+    cast : List Main.Cast
+    dvdAvailable : Bool
+    vinylAvailable : ()
+    someEnum : Main.SomeEnum
+
+public export
+Cast Main.Film JSON where
+    cast x = JObject [("title", cast x.title), ("year", cast x.year), ("cast", cast x.cast), ("dvdAvailable", cast x.dvdAvailable), ("vinylAvailable", cast x.vinylAvailable), ("someEnum", cast x.someEnum)]
+
+public export
+Main : Type
+Main = List Main.Film

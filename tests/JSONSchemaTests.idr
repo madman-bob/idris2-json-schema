@@ -19,7 +19,7 @@ refTests = MkTestPool "Ref" [] Nothing [
 
 cliTests : TestPool
 cliTests = MkTestPool "CLI" [] Nothing [
-    "Help"
+    "Help", "JSONCasts"
   ]
 
 main : IO ()

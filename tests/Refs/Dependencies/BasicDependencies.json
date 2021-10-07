@@ -9,6 +9,9 @@
     },
     "film": {
       "type": "object",
+      "required": [
+        "title"
+      ],
       "properties": {
         "title": {
           "$ref": "#/$defs/title"

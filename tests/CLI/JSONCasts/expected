@@ -1,4 +1,5 @@
 1/1: Building JSONCasts (JSONCasts.idr)
+import Data.List
 import Language.JSON
 
 namespace Cast
@@ -9,7 +10,7 @@ namespace Cast
 
     public export
     Cast Main.Cast.CastItem JSON where
-        cast x = JObject [("name", cast x.name)]
+        cast x = JObject $ catMaybes [Just ("name", cast x.name)]
 
 public export
 Cast : Type
@@ -44,15 +45,15 @@ public export
 record Film where
     constructor MkFilm
     title : String
-    year : Main.Film.Year
-    cast : List Main.Cast
-    dvdAvailable : Bool
-    vinylAvailable : ()
-    someEnum : Main.SomeEnum
+    year : Maybe Main.Film.Year
+    cast : Maybe (List Main.Cast)
+    dvdAvailable : Maybe Bool
+    vinylAvailable : Maybe ()
+    someEnum : Maybe Main.SomeEnum
 
 public export
 Cast Main.Film JSON where
-    cast x = JObject [("title", cast x.title), ("year", cast x.year), ("cast", cast x.cast), ("dvdAvailable", cast x.dvdAvailable), ("vinylAvailable", cast x.vinylAvailable), ("someEnum", cast x.someEnum)]
+    cast x = JObject $ catMaybes [Just ("title", cast x.title), do pure ("year", cast !x.year), do pure ("cast", cast !x.cast), do pure ("dvdAvailable", cast !x.dvdAvailable), do pure ("vinylAvailable", cast !x.vinylAvailable), do pure ("someEnum", cast !x.someEnum)]
 
 public export
 Main : Type

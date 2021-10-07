@@ -11,7 +11,7 @@ public export
 record Film where
     constructor MkFilm
     title : Main.Title
-    year : Main.Year
+    year : Maybe Main.Year
 
 public export
 Main : Type

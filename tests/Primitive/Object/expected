@@ -4,8 +4,8 @@ namespace Main
     record Address where
         constructor MkAddress
         streetAddress : String
-        city : String
-        state : String
+        city : Maybe String
+        state : Maybe String
         country : String
 
 public export
@@ -13,5 +13,5 @@ record Main where
     constructor MkMain
     firstName : String
     lastName : String
-    birthday : String
-    address : Main.Main.Address
+    birthday : Maybe String
+    address : Maybe Main.Main.Address

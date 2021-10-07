@@ -18,7 +18,7 @@ asIdrisType JSNumber = "Double"
 asIdrisType JSString = "String"
 
 support : JSONSchema QTypeName -> SortedSet QTypeName
-support (MkJSONSchema _ (JSObject props)) = foldr union empty $ map (\(MkJSONPropertySchema _ propSchema) => support propSchema) props
+support (MkJSONSchema _ (JSObject props)) = foldr union empty $ map (\prop => support prop.valueSchema) props
 support (MkJSONSchema _ (JSArray itemSchema)) = support itemSchema
 support (MkJSONSchema _ (JSRef ref)) = singleton ref
 support (MkJSONSchema _ (JSAnyOf schemas)) = foldr union empty (map support schemas)
@@ -35,11 +35,15 @@ writeCast name constraints = do
     case constraints of
         JSAtom _ => pure ()
         JSObject props => do
-            let propNames = map (\(MkJSONPropertySchema propName _) => (propName, show $ asIdrisPropName propName)) props
+            addImport "Data.List"
             writeCastHeader
             addLines [< concat [
-                "    cast x = JObject [",
-                concat $ intersperse ", " $ map (\(n, i) => "(\{show n}, cast x.\{i})") propNames,
+                "    cast x = JObject $ catMaybes [",
+                concat $ intersperse ", " $ map (\prop =>
+                    if prop.required
+                        then "Just (\{show prop.name}, cast x.\{show $ asIdrisPropName prop.name})"
+                        else "do pure (\{show prop.name}, cast !x.\{show $ asIdrisPropName prop.name})"
+                  ) props,
                 "]"
               ]]
         JSArray (MkJSONSchema _ itemConstraints) => pure ()
@@ -70,8 +74,9 @@ mutual
       where
         writeSchemaConstraints : QTypeName -> JSONSchemaConstraints QTypeName -> Writer IdrisModule ()
         writeSchemaConstraints name (JSObject props) = do
-            propNames <- namespaceBlock (shortName name) $ for props $ \(MkJSONPropertySchema propName propSchema) => do
-                ref <- refSchema (name <.> asIdrisTypeName propName) propSchema
+            propNames <- namespaceBlock (shortName name) $ for props $ \(MkJSONPropertySchema propName propRequired propSchema) => do
+                ref <- map (ifThenElse propRequired "" "Maybe " ++) $
+                           refSchema (name <.> asIdrisTypeName propName) propSchema {asSubexpression = not propRequired}
                 pure (propName, ref)
             addLines [<
                 "public export",

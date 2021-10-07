@@ -8,6 +8,9 @@
         },
         {
           "type": "object",
+          "required": [
+            "s"
+          ],
           "properties": {
             "s": {
               "$ref": "#/$defs/nat"

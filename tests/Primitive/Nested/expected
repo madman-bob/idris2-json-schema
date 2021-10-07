@@ -4,10 +4,10 @@ namespace Main
     record MainItem where
         constructor MkMainItem
         title : String
-        year : Double
-        cast : List String
-        dvdAvailable : Bool
-        vinylAvailable : ()
+        year : Maybe Double
+        cast : Maybe (List String)
+        dvdAvailable : Maybe Bool
+        vinylAvailable : Maybe ()
 
 public export
 Main : Type

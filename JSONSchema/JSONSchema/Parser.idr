@@ -31,6 +31,14 @@ parseAny (JObject xs) = Just JSAny
 parseAny (JBoolean True) = Just JSAny
 parseAny _ = Nothing
 
+parseRequiredFields : JSON -> Maybe (List String)
+parseRequiredFields (JArray xs) = allOk $ map parseString xs
+  where
+    parseString : JSON -> Maybe String
+    parseString (JString str) = Just str
+    parseString _ = Nothing
+parseRequiredFields _ = Nothing
+
 mutual
     parsePrimitive : JSON -> Maybe (JSONSchemaConstraints QTypeName)
     parsePrimitive schema = parseAsType !(lookup "type" schema)
@@ -50,10 +58,13 @@ mutual
             Just (JObject p) => Just p
             Nothing => Just []
             _ => Nothing
-        pure $ JSObject !(allOk $ map (uncurry parseProp) props)
+        requiredFields <- case lookup "required" schema of
+            Just r => parseRequiredFields r
+            Nothing => Just []
+        pure $ JSObject !(allOk $ map (uncurry $ parseProp requiredFields) props)
       where
-        parseProp : String -> JSON -> Maybe (JSONPropertySchema QTypeName)
-        parseProp name propSchema = pure $ MkJSONPropertySchema name !(parse propSchema)
+        parseProp : List String -> String -> JSON -> Maybe (JSONPropertySchema QTypeName)
+        parseProp requiredFields name propSchema = pure $ MkJSONPropertySchema name (elem name requiredFields) !(parse propSchema)
 
     parseArray : JSON -> Maybe (JSONSchemaConstraints QTypeName)
     parseArray schema = do

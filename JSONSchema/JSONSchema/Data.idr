@@ -30,6 +30,7 @@ mutual
     record JSONPropertySchema (ref : Type) where
         constructor MkJSONPropertySchema
         name : String
+        required : Bool
         valueSchema : JSONSchema ref
 
 export

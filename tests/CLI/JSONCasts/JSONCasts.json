@@ -8,6 +8,9 @@
       "type": "array",
       "items": {
         "type": "object",
+        "required": [
+          "name"
+        ],
         "properties": {
           "name": {
             "type": "string"
@@ -17,6 +20,9 @@
     },
     "film": {
       "type": "object",
+      "required": [
+        "title"
+      ],
       "properties": {
         "title": {
           "type": "string"

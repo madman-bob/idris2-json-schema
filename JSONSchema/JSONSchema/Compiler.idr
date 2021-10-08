@@ -27,8 +27,7 @@ support (MkJSONSchema _ _) = empty
 writeCast : QTypeName -> JSONSchemaConstraints QTypeName -> Writer IdrisModule ()
 writeCast name constraints = do
     addImport "Language.JSON"
-    let writeCastHeader = addLines [<
-        "",
+    let writeCastHeader = addCastLines [<
         "public export",
         "Cast \{show name} JSON where"
       ]
@@ -37,7 +36,7 @@ writeCast name constraints = do
         JSObject props => do
             addImport "Data.List"
             writeCastHeader
-            addLines [< concat [
+            addCastLines [< concat [
                 "    cast x = JObject $ catMaybes [",
                 concat $ intersperse ", " $ map (\prop =>
                     if prop.required
@@ -46,17 +45,20 @@ writeCast name constraints = do
                   ) props,
                 "]"
               ]]
+            addCastLines [<""]
         JSArray (MkJSONSchema _ itemConstraints) => pure ()
         JSEnum options => do
             let conNames = constructorNames (shortName name) $ map jsonAsName options
             writeCastHeader
             for_ (zip options conNames) $ \(option, conName) => do
-                addLines [<"    cast \{show conName} = \{show @{Idris} option}"]
+                addCastLines [<"    cast \{show conName} = \{show @{Idris} option}"]
+            addCastLines [<""]
         JSRef _ => pure ()
         JSAnyOf schemas => do
             writeCastHeader
             for_ (genNames (shortName name) schemas) $ \(conName, _, _) => do
-                addLines [<"    cast (\{show conName} x) = cast x"]
+                addCastLines [<"    cast (\{show conName} x) = cast x"]
+            addCastLines [<""]
         JSAny => pure ()
 
 mutual
@@ -67,6 +69,7 @@ mutual
     writeSchema name (MkJSONSchema defs constraints) = do
         writeDefs defs
         writeSchemaConstraints name constraints
+        addDataLines [<""]
 
         if opts.jsonCasts
             then writeCast name constraints
@@ -78,15 +81,15 @@ mutual
                 ref <- map (ifThenElse propRequired "" "Maybe " ++) $
                            refSchema (name <.> asIdrisTypeName propName) propSchema {asSubexpression = not propRequired}
                 pure (propName, ref)
-            addLines [<
+            addDataLines [<
                 "public export",
                 "record \{show $ shortName name} where" ,
                 "    constructor \{show $ constructorName $ shortName name}"
               ]
             for_ propNames $ \(propName, ref) => do
-                addLines [<"    \{show $ asIdrisPropName propName} : \{ref}"]
+                addDataLines [<"    \{show $ asIdrisPropName propName} : \{ref}"]
         writeSchemaConstraints name (JSEnum options) = do
-            addLines [<
+            addDataLines [<
                 "public export",
                 "data \{show $ shortName name} = " ++ (concat $ intersperse " | " $ map show $ constructorNames (shortName name) $ map jsonAsName options)
               ]
@@ -94,13 +97,13 @@ mutual
             variants <- namespaceBlock (shortName name) $ for (genNames (shortName name) schemas) $ \(conName, typeName, schema) => do
                 ref <- refSchema (name <.> typeName) schema {asSubexpression = True}
                 pure $ show conName ++ " " ++ ref
-            addLines [<
+            addDataLines [<
                 "public export",
                 "data \{show $ shortName name} = " ++ (concat $ intersperse " | " variants)
               ]
         writeSchemaConstraints name schema = do
             ref <- refSchema name (simpleSchema schema)
-            addLines [<
+            addDataLines [<
                 "public export",
                 "\{show $ shortName name} : Type" ,
                 "\{show $ shortName name} = \{ref}"
@@ -134,7 +137,6 @@ mutual
             pure "JSON"
         refSchemaConstraints name schema = do
             writeSchema name (simpleSchema schema)
-            addLines [<""]
             pure $ show name
 
     writeDefs : CompileOptions
@@ -151,9 +153,7 @@ mutual
         writeDef : QTypeName -> Writer IdrisModule ()
         writeDef name = case lookup name defs of
             Nothing => pure ()
-            Just schema => do
-                writeSchema name schema
-                addLines [<""]
+            Just schema => writeSchema name schema
 
 export
 compileSchema : CompileOptions => JSONSchema QTypeName -> List String
@@ -164,4 +164,5 @@ compileSchema schema = cast {from = SnocList String} $ execWriter $ do
         [] => pure ()
         xs => tell $ cast (map ("import " ++) xs) :< ""
 
-    tell $ lines idrisModule
+    tell $ idrisModule.dataLines
+    tell $ idrisModule.castLines

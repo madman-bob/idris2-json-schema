@@ -1,0 +1,16 @@
+{
+  "$ref": "#/$defs/a",
+  "$defs": {
+    "a": {
+      "type": "object",
+      "properties": {
+        "b": {
+          "$ref": "#/$defs/b"
+        }
+      }
+    },
+    "b": {
+      "$ref": "#/$defs/a"
+    }
+  }
+}

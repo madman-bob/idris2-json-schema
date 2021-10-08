@@ -1,3 +1,7 @@
 . ../../testutils.sh
 
 basicTest JSONCasts --json-casts
+
+echo "---"
+
+basicTest DeferredRef --json-casts

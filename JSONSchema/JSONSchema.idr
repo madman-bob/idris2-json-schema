@@ -1,5 +1,6 @@
 module JSONSchema
 
+import Data.List
 import System
 import System.File
 import System.Path
@@ -46,7 +47,7 @@ main = jsonSchema.handleWith $ [\case
         let Just schema = JSONSchema.parse json
             | Nothing => putStrLn "Malformed JSON Schema"
 
-        Right () <- writeFile (file <.> "idr") (concat $ map (++ "\n") $ compileSchema schema)
+        Right () <- writeFile (file <.> "idr") (concat $ intersperse "\n" $ compileSchema schema)
             | Left err => printLn err
 
         pure (),

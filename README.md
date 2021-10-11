@@ -15,7 +15,7 @@ make all
 Run:
 
 ```bash
-.build/exec/json-schema schemaFile.json
+./build/exec/json-schema schemaFile.json
 ```
 
 to generate `schemaFile.idr`.

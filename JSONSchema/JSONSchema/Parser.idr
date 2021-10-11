@@ -54,10 +54,9 @@ mutual
 
     parseObject : CompileOptions => JSON -> Maybe (JSONSchemaConstraints QTypeName)
     parseObject schema = do
-        props <- case lookup "properties" schema of
-            Just (JObject p) => Just p
-            Nothing => Just []
-            _ => Nothing
+        let Just (JObject props) = lookup "properties" schema
+            | Nothing => Just JSAny
+            | Just _ => Nothing
         requiredFields <- case lookup "required" schema of
             Just r => parseRequiredFields r
             Nothing => Just []

@@ -5,3 +5,7 @@ basicTest Any1
 echo "---"
 
 basicTest Any2
+
+echo "---"
+
+basicTest Any3

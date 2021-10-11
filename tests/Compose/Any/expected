@@ -15,3 +15,12 @@ import Language.JSON
 public export
 Main : Type
 Main = JSON
+---
+1/1: Building Any3 (Any3.idr)
+module Main
+
+import Language.JSON
+
+public export
+Main : Type
+Main = JSON

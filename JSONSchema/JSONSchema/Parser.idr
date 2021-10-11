@@ -18,13 +18,13 @@ parseEnum schema = do
         | _ => Nothing
     pure $ JSEnum options
 
-parseRef : JSON -> Maybe (JSONSchemaConstraints QTypeName)
+parseRef : (opts : CompileOptions) => JSON -> Maybe (JSONSchemaConstraints QTypeName)
 parseRef schema = do
     JString ref <- lookup "$ref" schema
         | _ => Nothing
     let "#" ::: [_, name] = split (== '/') ref
         | _ => Nothing
-    pure $ JSRef $ global $ asIdrisTypeName name
+    pure $ JSRef $ opts.moduleName <.> asIdrisTypeName name
 
 parseAny : JSON -> Maybe (JSONSchemaConstraints QTypeName)
 parseAny (JObject xs) = Just JSAny
@@ -40,7 +40,7 @@ parseRequiredFields (JArray xs) = allOk $ map parseString xs
 parseRequiredFields _ = Nothing
 
 mutual
-    parsePrimitive : JSON -> Maybe (JSONSchemaConstraints QTypeName)
+    parsePrimitive : CompileOptions => JSON -> Maybe (JSONSchemaConstraints QTypeName)
     parsePrimitive schema = parseAsType !(lookup "type" schema)
       where
         parseAsType : JSON -> Maybe (JSONSchemaConstraints QTypeName)
@@ -52,7 +52,7 @@ mutual
         parseAsType (JString "string") = Just $ JSAtom JSString
         parseAsType _ = Nothing
 
-    parseObject : JSON -> Maybe (JSONSchemaConstraints QTypeName)
+    parseObject : CompileOptions => JSON -> Maybe (JSONSchemaConstraints QTypeName)
     parseObject schema = do
         props <- case lookup "properties" schema of
             Just (JObject p) => Just p
@@ -66,18 +66,18 @@ mutual
         parseProp : List String -> String -> JSON -> Maybe (JSONPropertySchema QTypeName)
         parseProp requiredFields name propSchema = pure $ MkJSONPropertySchema name (elem name requiredFields) !(parse propSchema)
 
-    parseArray : JSON -> Maybe (JSONSchemaConstraints QTypeName)
+    parseArray : CompileOptions => JSON -> Maybe (JSONSchemaConstraints QTypeName)
     parseArray schema = do
         itemSchema <- lookup "items" schema
         pure $ JSArray !(parse itemSchema)
 
-    parseAnyOf : JSON -> Maybe (JSONSchemaConstraints QTypeName)
+    parseAnyOf : CompileOptions => JSON -> Maybe (JSONSchemaConstraints QTypeName)
     parseAnyOf schema = do
         JArray options <- lookup "anyOf" schema
             | _ => Nothing
         pure $ JSAnyOf !(allOk $ map parse options)
 
-    parseConstraints : JSON -> Maybe (JSONSchemaConstraints QTypeName)
+    parseConstraints : CompileOptions => JSON -> Maybe (JSONSchemaConstraints QTypeName)
     parseConstraints schema =
         (parseAnyOf schema) <|>
         (parseRef schema) <|>
@@ -85,13 +85,13 @@ mutual
         (parsePrimitive schema) <|>
         (parseAny schema)
 
-    parseDefs : JSON -> Maybe (SortedMap QTypeName (JSONSchema QTypeName))
+    parseDefs : (opts : CompileOptions) => JSON -> Maybe (SortedMap QTypeName (JSONSchema QTypeName))
     parseDefs schema = do
         defs <- for ["$defs", "definitions"] $ \tag => case lookup tag schema of
-              Just (JObject xs) => pure $ fromList !(allOk $ map (\(name, subSchema) => pure $ (global $ asIdrisTypeName name, !(parse subSchema))) $ xs)
+              Just (JObject xs) => pure $ fromList !(allOk $ map (\(name, subSchema) => pure $ (opts.moduleName <.> asIdrisTypeName name, !(parse subSchema))) $ xs)
               _ => Just empty
         pure $ foldr mergeLeft empty defs
 
     export
-    parse : JSON -> Maybe (JSONSchema QTypeName)
+    parse : CompileOptions => JSON -> Maybe (JSONSchema QTypeName)
     parse json = pure $ MkJSONSchema !(parseDefs json) !(parseConstraints json)

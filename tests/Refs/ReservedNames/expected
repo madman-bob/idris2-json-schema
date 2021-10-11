@@ -1,4 +1,6 @@
 1/1: Building ReservedNames (ReservedNames.idr)
+module Main
+
 public export
 Delay_ : Type
 Delay_ = String

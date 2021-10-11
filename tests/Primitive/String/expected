@@ -1,4 +1,6 @@
 1/1: Building String (String.idr)
+module Main
+
 public export
 Main : Type
 Main = String

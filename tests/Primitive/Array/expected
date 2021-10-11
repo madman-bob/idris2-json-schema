@@ -1,4 +1,6 @@
 1/1: Building Array (Array.idr)
+module Main
+
 public export
 Main : Type
 Main = List String

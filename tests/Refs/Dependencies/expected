@@ -1,4 +1,6 @@
 1/1: Building BasicDependencies (BasicDependencies.idr)
+module Main
+
 public export
 Title : Type
 Title = String
@@ -18,6 +20,8 @@ Main : Type
 Main = List Main.Film
 ---
 1/1: Building CircularDependencies (CircularDependencies.idr)
+module Main
+
 mutual
     public export
     data Even = Even_0 () | Even_1 Main.Odd

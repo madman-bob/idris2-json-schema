@@ -1,4 +1,6 @@
 1/1: Building Defs (Defs.idr)
+module Main
+
 public export
 record Film where
     constructor MkFilm
@@ -10,6 +12,8 @@ Main : Type
 Main = List Main.Film
 ---
 1/1: Building Definitions (Definitions.idr)
+module Main
+
 public export
 record Film where
     constructor MkFilm

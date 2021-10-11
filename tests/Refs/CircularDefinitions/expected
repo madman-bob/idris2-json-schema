@@ -1,4 +1,6 @@
 1/1: Building CircularDefinitions (CircularDefinitions.idr)
+module Main
+
 mutual
     namespace Nat
         public export

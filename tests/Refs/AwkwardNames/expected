@@ -1,4 +1,6 @@
 1/1: Building AwkwardNames (AwkwardNames.idr)
+module Main
+
 public export
 data X = X_0 Double | X_1 String | X_2 ()
 

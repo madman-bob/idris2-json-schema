@@ -1,0 +1,3 @@
+. ../../testutils.sh
+
+basicTest CustomNames --module-name CustomNames --schema-name Films

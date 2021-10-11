@@ -1,4 +1,6 @@
 1/1: Building Object (Object.idr)
+module Main
+
 namespace Main
     public export
     record Address where

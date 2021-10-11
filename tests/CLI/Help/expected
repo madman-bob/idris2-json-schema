@@ -1,13 +1,17 @@
 json-schema  Generate Idris 2 data types from a JSON Schema
              Usage: json-schema input-file.json
-  --help        Print this help text
+  --help         Print this help text
 
-  --json-casts  Implement Cast interfaces to JSON for the generated data types
+  --module-name  Full name of the generated module (default "Main")
+  --schema-name  Name of the top-level schema (default "Main")
+  --json-casts   Implement Cast interfaces to JSON for the generated data types
 
 ---
 json-schema  Generate Idris 2 data types from a JSON Schema
              Usage: json-schema input-file.json
-  --help        Print this help text
+  --help         Print this help text
 
-  --json-casts  Implement Cast interfaces to JSON for the generated data types
+  --module-name  Full name of the generated module (default "Main")
+  --schema-name  Name of the top-level schema (default "Main")
+  --json-casts   Implement Cast interfaces to JSON for the generated data types
 

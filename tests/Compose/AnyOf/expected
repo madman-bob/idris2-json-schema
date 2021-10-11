@@ -1,8 +1,12 @@
 1/1: Building AnyOf (AnyOf.idr)
+module Main
+
 public export
 data Main = Main_0 String | Main_1 Double
 ---
 1/1: Building NestedAnyOf (NestedAnyOf.idr)
+module Main
+
 namespace Main
     namespace Main_0T
         public export

@@ -1,3 +1,5 @@
 1/1: Building Brackets (Brackets.idr)
+module Main
+
 public export
 data Main = Main_0 (List (List Double)) | Main_1 Double

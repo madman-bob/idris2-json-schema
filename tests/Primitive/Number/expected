@@ -1,4 +1,6 @@
 1/1: Building Number (Number.idr)
+module Main
+
 public export
 Main : Type
 Main = Double

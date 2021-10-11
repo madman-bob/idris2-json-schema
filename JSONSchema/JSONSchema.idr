@@ -24,6 +24,12 @@ jsonSchema = MkCommand {
         "--help" ::= basic "Print this help text" none
     ],
     modifiers = [
+        "--module-name" ::= option
+            "Full name of the generated module (default \"Main\")"
+            (MkArguments False (Some String) pure),
+        "--schema-name" ::= option
+            "Name of the top-level schema (default \"Main\")"
+            (MkArguments False (Some String) pure),
         "--json-casts" ::= flag "Implement Cast interfaces to JSON for the generated data types"
     ],
     arguments = filePath
@@ -35,8 +41,11 @@ printUsage = putStrLn jsonSchema.usage
 main : IO ()
 main = jsonSchema.handleWith $ [\case
     MkParsedCommand _ Nothing => printUsage
-    MkParsedCommand (MkRecord [jsonCasts]) (Just file) => do
-        let compileOptions = MkCompileOptions jsonCasts
+    MkParsedCommand (MkRecord [moduleName, schemaName, jsonCasts]) (Just file) => do
+        let compileOptions = MkCompileOptions
+              (maybe "Main" asIdrisQTypeName moduleName)
+              (maybe "Main" asIdrisTypeName schemaName)
+              jsonCasts
 
         Right jsonStr <- readFile file
             | Left err => printLn err

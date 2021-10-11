@@ -1,3 +1,5 @@
 1/1: Building Enum (Enum.idr)
+module Main
+
 public export
 data Main = MainNull | MainFalse | MainObject_Key_Value | MainArray_Lorem_Ipsum | Main1 | MainHelloWorld

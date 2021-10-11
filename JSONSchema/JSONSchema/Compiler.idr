@@ -156,9 +156,11 @@ mutual
             Just schema => writeSchema name schema
 
 export
-compileSchema : CompileOptions => JSONSchema QTypeName -> List String
+compileSchema : (opts : CompileOptions) => JSONSchema QTypeName -> List String
 compileSchema schema = cast {from = SnocList String} $ execWriter $ do
-    let idrisModule = execWriter $ writeSchema (global "Main") schema
+    tell [<"module \{show opts.moduleName}", ""]
+
+    let idrisModule = execWriter $ writeSchema (opts.moduleName <.> opts.schemaName) schema
 
     case SortedSet.toList $ imports idrisModule of
         [] => pure ()

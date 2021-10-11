@@ -1,4 +1,6 @@
 1/1: Building Nested (Nested.idr)
+module Main
+
 namespace Main
     public export
     record MainItem where

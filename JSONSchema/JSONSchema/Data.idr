@@ -4,6 +4,15 @@ import Language.JSON
 
 import public Libraries.Data.SortedMap
 
+import JSONSchema.Names
+
+public export
+record CompileOptions where
+    constructor MkCompileOptions
+    moduleName : QTypeName
+    schemaName : TypeName
+    jsonCasts : Bool
+
 public export
 data JSONAtomSchema = JSNull
                     | JSBoolean

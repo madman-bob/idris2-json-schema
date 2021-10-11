@@ -1,4 +1,6 @@
 1/1: Building Null (Null.idr)
+module Main
+
 public export
 Main : Type
 Main = ()

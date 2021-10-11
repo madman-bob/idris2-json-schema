@@ -11,11 +11,6 @@ import JSONSchema.Names
 %default total
 
 public export
-record CompileOptions where
-    constructor MkCompileOptions
-    jsonCasts : Bool
-
-public export
 record IdrisModule where
     constructor MkIdrisModule
     imports : SortedSet String

@@ -77,17 +77,17 @@ mutual
       where
         writeSchemaConstraints : QTypeName -> JSONSchemaConstraints QTypeName -> Writer IdrisModule ()
         writeSchemaConstraints name (JSObject props) = do
-            propNames <- namespaceBlock (shortName name) $ for props $ \(MkJSONPropertySchema propName propRequired propSchema) => do
-                ref <- map (ifThenElse propRequired "" "Maybe " ++) $
-                           refSchema (name <.> asIdrisTypeName propName) propSchema {asSubexpression = not propRequired}
-                pure (propName, ref)
+            refs <- namespaceBlock (shortName name) $ for props $ \prop => do
+                refSchema (name <.> asIdrisTypeName prop.name) prop.valueSchema {asSubexpression = not prop.required}
             addDataLines [<
                 "public export",
                 "record \{show $ shortName name} where" ,
                 "    constructor \{show $ constructorName $ shortName name}"
               ]
-            for_ propNames $ \(propName, ref) => do
-                addDataLines [<"    \{show $ asIdrisPropName propName} : \{ref}"]
+            for_ (zip props refs) $ \(prop, ref) => do
+                if prop.required
+                    then addDataLines [<"    \{show $ asIdrisPropName prop.name} : \{ref}"]
+                    else addDataLines [<"    {default Nothing \{show $ asIdrisPropName prop.name} : Maybe \{ref}}"]
         writeSchemaConstraints name (JSEnum options) = do
             addDataLines [<
                 "public export",

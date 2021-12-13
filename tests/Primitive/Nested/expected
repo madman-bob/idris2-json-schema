@@ -6,10 +6,10 @@ namespace Main
     record MainItem where
         constructor MkMainItem
         title : String
-        year : Maybe Double
-        cast : Maybe (List String)
-        dvdAvailable : Maybe Bool
-        vinylAvailable : Maybe ()
+        {default Nothing year : Maybe Double}
+        {default Nothing cast : Maybe (List String)}
+        {default Nothing dvdAvailable : Maybe Bool}
+        {default Nothing vinylAvailable : Maybe ()}
 
 public export
 Main : Type

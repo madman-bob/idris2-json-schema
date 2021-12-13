@@ -5,7 +5,7 @@ public export
 record Film where
     constructor MkFilm
     title : String
-    year : Maybe Double
+    {default Nothing year : Maybe Double}
 
 public export
 Main : Type
@@ -18,7 +18,7 @@ public export
 record Film where
     constructor MkFilm
     title : String
-    year : Maybe Double
+    {default Nothing year : Maybe Double}
 
 public export
 Main : Type

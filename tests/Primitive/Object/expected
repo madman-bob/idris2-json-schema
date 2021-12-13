@@ -6,8 +6,8 @@ namespace Main
     record Address where
         constructor MkAddress
         streetAddress : String
-        city : Maybe String
-        state : Maybe String
+        {default Nothing city : Maybe String}
+        {default Nothing state : Maybe String}
         country : String
 
 public export
@@ -15,5 +15,5 @@ record Main where
     constructor MkMain
     firstName : String
     lastName : String
-    birthday : Maybe String
-    address : Maybe Main.Main.Address
+    {default Nothing birthday : Maybe String}
+    {default Nothing address : Maybe Main.Main.Address}

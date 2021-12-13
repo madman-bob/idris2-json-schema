@@ -13,7 +13,7 @@ public export
 record Film where
     constructor MkFilm
     title : Main.Title
-    year : Maybe Main.Year
+    {default Nothing year : Maybe Main.Year}
 
 public export
 Main : Type

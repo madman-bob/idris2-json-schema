@@ -29,11 +29,11 @@ public export
 record Film where
     constructor MkFilm
     title : String
-    year : Maybe Main.Film.Year
-    cast : Maybe (List Main.Cast)
-    dvdAvailable : Maybe Bool
-    vinylAvailable : Maybe ()
-    someEnum : Maybe Main.SomeEnum
+    {default Nothing year : Maybe Main.Film.Year}
+    {default Nothing cast : Maybe (List Main.Cast)}
+    {default Nothing dvdAvailable : Maybe Bool}
+    {default Nothing vinylAvailable : Maybe ()}
+    {default Nothing someEnum : Maybe Main.SomeEnum}
 
 public export
 Main : Type
@@ -73,7 +73,7 @@ mutual
     public export
     record A where
         constructor MkA
-        b : Maybe Main.B
+        {default Nothing b : Maybe Main.B}
 
     public export
     B : Type

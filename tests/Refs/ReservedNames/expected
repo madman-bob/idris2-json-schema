@@ -20,44 +20,44 @@ Lazy_ = String
 public export
 record ReservedProperties where
     constructor MkReservedProperties
-    auto_ : Maybe String
-    case_ : Maybe String
-    covering_ : Maybe String
-    data_ : Maybe String
-    default_ : Maybe String
-    do_ : Maybe String
-    else_ : Maybe String
-    export_ : Maybe String
-    forall_ : Maybe String
-    if_ : Maybe String
-    implementation_ : Maybe String
-    implicit_ : Maybe String
-    import_ : Maybe String
-    impossible_ : Maybe String
-    in_ : Maybe String
-    infix_ : Maybe String
-    infixl_ : Maybe String
-    infixr_ : Maybe String
-    interface_ : Maybe String
-    let_ : Maybe String
-    module_ : Maybe String
-    mutual_ : Maybe String
-    namespace_ : Maybe String
-    of_ : Maybe String
-    open_ : Maybe String
-    parameters_ : Maybe String
-    partial_ : Maybe String
-    prefix_ : Maybe String
-    private_ : Maybe String
-    proof_ : Maybe String
-    public_ : Maybe String
-    record_ : Maybe String
-    rewrite_ : Maybe String
-    then_ : Maybe String
-    total_ : Maybe String
-    using_ : Maybe String
-    where_ : Maybe String
-    with_ : Maybe String
+    {default Nothing auto_ : Maybe String}
+    {default Nothing case_ : Maybe String}
+    {default Nothing covering_ : Maybe String}
+    {default Nothing data_ : Maybe String}
+    {default Nothing default_ : Maybe String}
+    {default Nothing do_ : Maybe String}
+    {default Nothing else_ : Maybe String}
+    {default Nothing export_ : Maybe String}
+    {default Nothing forall_ : Maybe String}
+    {default Nothing if_ : Maybe String}
+    {default Nothing implementation_ : Maybe String}
+    {default Nothing implicit_ : Maybe String}
+    {default Nothing import_ : Maybe String}
+    {default Nothing impossible_ : Maybe String}
+    {default Nothing in_ : Maybe String}
+    {default Nothing infix_ : Maybe String}
+    {default Nothing infixl_ : Maybe String}
+    {default Nothing infixr_ : Maybe String}
+    {default Nothing interface_ : Maybe String}
+    {default Nothing let_ : Maybe String}
+    {default Nothing module_ : Maybe String}
+    {default Nothing mutual_ : Maybe String}
+    {default Nothing namespace_ : Maybe String}
+    {default Nothing of_ : Maybe String}
+    {default Nothing open_ : Maybe String}
+    {default Nothing parameters_ : Maybe String}
+    {default Nothing partial_ : Maybe String}
+    {default Nothing prefix_ : Maybe String}
+    {default Nothing private_ : Maybe String}
+    {default Nothing proof_ : Maybe String}
+    {default Nothing public_ : Maybe String}
+    {default Nothing record_ : Maybe String}
+    {default Nothing rewrite_ : Maybe String}
+    {default Nothing then_ : Maybe String}
+    {default Nothing total_ : Maybe String}
+    {default Nothing using_ : Maybe String}
+    {default Nothing where_ : Maybe String}
+    {default Nothing with_ : Maybe String}
 
 public export
 Type_ : Type

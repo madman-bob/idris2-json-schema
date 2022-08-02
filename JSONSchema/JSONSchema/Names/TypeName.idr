@@ -1,6 +1,7 @@
 module JSONSchema.Names.TypeName
 
 import Data.List
+import Data.String
 
 import Language.JSON
 
@@ -47,7 +48,16 @@ export
 jsonAsName : JSON -> TypeName
 jsonAsName JNull = MkTypeName "Null"
 jsonAsName (JBoolean b) = MkTypeName $ show b
-jsonAsName (JNumber x) = MkTypeName $ show x
+jsonAsName (JNumber x) = MkTypeName $
+    let (i, f) = break (== '.') (show x) in
+    if f == ".0"
+        then i
+        else i ++ "_" ++ tail f
+  where
+    tail : String -> String
+    tail s = case strM s of
+        StrNil => ""
+        StrCons c cs => cs
 jsonAsName (JString s) = asIdrisTypeName s
 jsonAsName (JArray xs) = compoundName $ MkTypeName "Array" :: map jsonAsName xs
 jsonAsName (JObject props) = compoundName $ MkTypeName "Object" ::

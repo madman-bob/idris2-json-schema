@@ -50,7 +50,7 @@ Cast Main.SomeEnum JSON where
     cast SomeEnumFalse = JBoolean False
     cast SomeEnumObject_Key_Value = JObject [("key", JString "value")]
     cast SomeEnumArray_Lorem_Ipsum = JArray [JString "Lorem", JString "ipsum"]
-    cast SomeEnum1 = JNumber 1
+    cast SomeEnum1 = JNumber 1.0
     cast SomeEnumHelloWorld = JString "Hello, world"
 
 namespace Film

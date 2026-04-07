@@ -3,8 +3,8 @@ module JSONSchema.TopoSort
 import Data.List
 import public Data.List1
 
-import public Libraries.Data.SortedMap
-import public Libraries.Data.SortedSet
+import public Data.SortedMap
+import public Data.SortedSet
 import public Libraries.Data.Graph
 
 public export

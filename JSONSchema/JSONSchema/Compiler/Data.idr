@@ -4,7 +4,7 @@ import public Control.Monad.Identity
 import public Control.Monad.Writer
 import public Data.SnocList
 
-import public Libraries.Data.SortedSet
+import public Data.SortedSet
 
 import JSONSchema.Names
 

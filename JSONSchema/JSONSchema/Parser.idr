@@ -5,12 +5,14 @@ import Data.String
 
 import Language.JSON
 
-import Libraries.Data.SortedMap
+import Data.SortedMap
 
 import JSONSchema.Data
 import JSONSchema.Names
 import JSONSchema.Parser.Error
 import JSONSchema.JSONUtils
+
+%hide Language.JSON.Data.lookup
 
 parseEnum : JSON -> Maybe (JSONSchemaConstraints QTypeName)
 parseEnum schema = do

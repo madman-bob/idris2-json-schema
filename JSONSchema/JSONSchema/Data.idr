@@ -2,7 +2,7 @@ module JSONSchema.Data
 
 import Language.JSON
 
-import public Libraries.Data.SortedMap
+import public Data.SortedMap
 
 import JSONSchema.Names
 

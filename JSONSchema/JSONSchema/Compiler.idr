@@ -162,7 +162,7 @@ compileSchema schema = cast {from = SnocList String} $ execWriter $ do
 
     let idrisModule = execWriter $ writeSchema (opts.moduleName <.> opts.schemaName) schema
 
-    case SortedSet.toList $ imports idrisModule of
+    case Prelude.toList $ imports idrisModule of
         [] => pure ()
         xs => tell $ cast (map ("import " ++) xs) :< ""
 

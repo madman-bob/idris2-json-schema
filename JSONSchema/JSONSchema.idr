@@ -14,6 +14,9 @@ import public JSONSchema.Data as JSONSchema
 import public JSONSchema.Names as JSONSchema
 import public JSONSchema.Parser as JSONSchema
 
+%hide Data.Record.SmartConstructors.infix.(::=)
+%hide System.Path.infixr.(<.>)
+
 jsonSchema : Command "json-schema"
 jsonSchema = MkCommand {
     description = """

@@ -44,7 +44,7 @@ export
 shortName : QTypeName -> TypeName
 shortName (MkQTypeName parents name) = name
 
-infixl 5 <.>
+export infixl 5 <.>
 
 export
 (<.>) : QTypeName -> TypeName -> QTypeName

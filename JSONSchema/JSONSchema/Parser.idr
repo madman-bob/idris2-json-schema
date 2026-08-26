@@ -14,6 +14,10 @@ import JSONSchema.JSONUtils
 
 %hide Language.JSON.Data.lookup
 
+parseNat : JSON -> Maybe Nat
+parseNat (JNumber xx) = Just (cast xx)
+parseNat _ = Nothing
+
 parseEnum : JSON -> Maybe (JSONSchemaConstraints QTypeName)
 parseEnum schema = do
     JArray options <- lookup "enum" schema
@@ -70,7 +74,9 @@ mutual
     parseArray : CompileOptions => JSON -> Maybe (JSONSchemaConstraints QTypeName)
     parseArray schema = do
         itemSchema <- lookup "items" schema
-        pure $ JSArray !(parse itemSchema)
+        let minItems = lookup "minItems" schema >>= parseNat
+        let maxItems = lookup "maxItems" schema >>= parseNat
+        pure $ JSArray !(parse itemSchema) minItems maxItems
 
     parseAnyOf : CompileOptions => JSON -> Maybe (JSONSchemaConstraints QTypeName)
     parseAnyOf schema = do

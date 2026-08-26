@@ -19,7 +19,7 @@ asIdrisType JSString = "String"
 
 support : JSONSchema QTypeName -> SortedSet QTypeName
 support (MkJSONSchema _ (JSObject props)) = foldr union empty $ map (\prop => support prop.valueSchema) props
-support (MkJSONSchema _ (JSArray itemSchema)) = support itemSchema
+support (MkJSONSchema _ (JSArray itemSchema _ _)) = support itemSchema
 support (MkJSONSchema _ (JSRef ref)) = singleton ref
 support (MkJSONSchema _ (JSAnyOf schemas)) = foldr union empty (map support schemas)
 support (MkJSONSchema _ _) = empty
@@ -46,7 +46,7 @@ writeCast name constraints = do
                 "]"
               ]]
             addCastLines [<""]
-        JSArray (MkJSONSchema _ itemConstraints) => pure ()
+        JSArray (MkJSONSchema _ itemConstraints) _ _ => pure ()
         JSEnum options => do
             let conNames = constructorNames (shortName name) $ map jsonAsName options
             writeCastHeader
@@ -125,7 +125,7 @@ mutual
                             -> {default False asSubexpression : Bool}
                             -> Writer IdrisModule String
         refSchemaConstraints _ (JSAtom atomSchema) = pure $ asIdrisType atomSchema
-        refSchemaConstraints name (JSArray itemSchema) = do
+        refSchemaConstraints name (JSArray itemSchema min max) = do
             let itemName = subName (shortName name) "Item"
             ref <- namespaceBlock (shortName name) $ refSchema (name <.> itemName) itemSchema {asSubexpression = True}
             if asSubexpression

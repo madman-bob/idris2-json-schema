@@ -19,7 +19,7 @@ asIdrisType JSString = "String"
 
 support : JSONSchema QTypeName -> SortedSet QTypeName
 support (MkJSONSchema _ (JSObject props)) = foldr union empty $ map (\prop => support prop.valueSchema) props
-support (MkJSONSchema _ (JSArray itemSchema)) = support itemSchema
+support (MkJSONSchema _ (JSArray itemSchema _ _)) = support itemSchema
 support (MkJSONSchema _ (JSRef ref)) = singleton ref
 support (MkJSONSchema _ (JSAnyOf schemas)) = foldr union empty (map support schemas)
 support (MkJSONSchema _ _) = empty
@@ -46,7 +46,7 @@ writeCast name constraints = do
                 "]"
               ]]
             addCastLines [<""]
-        JSArray (MkJSONSchema _ itemConstraints) => pure ()
+        JSArray (MkJSONSchema _ itemConstraints) _ _ => pure ()
         JSEnum options => do
             let conNames = constructorNames (shortName name) $ map jsonAsName options
             writeCastHeader
@@ -125,12 +125,24 @@ mutual
                             -> {default False asSubexpression : Bool}
                             -> Writer IdrisModule String
         refSchemaConstraints _ (JSAtom atomSchema) = pure $ asIdrisType atomSchema
-        refSchemaConstraints name (JSArray itemSchema) = do
+        refSchemaConstraints name (JSArray itemSchema min max) = do
+            listType <- case (min, max) of
+                (Nothing, Nothing) => pure "List"
+                (Just min, Nothing) => do
+                    addImport "Data.LongList"
+                    pure "LongList \{show min}"
+                (Nothing, Just max) => do
+                    addImport "Data.ShortList"
+                    pure "ShortList \{show max}"
+                (Just min, Just max) => do
+                    addImport "Data.BoundedList"
+                    pure "BoundedList \{show min} \{show max}"
+
             let itemName = subName (shortName name) "Item"
-            ref <- namespaceBlock (shortName name) $ refSchema (name <.> itemName) itemSchema {asSubexpression = True}
+            itemRef <- namespaceBlock (shortName name) $ refSchema (name <.> itemName) itemSchema {asSubexpression = True}
             if asSubexpression
-                then pure $ "(List \{ref})"
-                else pure $ "List \{ref}"
+                then pure $ "(\{listType} \{itemRef})"
+                else pure $ "\{listType} \{itemRef}"
         refSchemaConstraints name (JSRef ref) = pure $ show ref
         refSchemaConstraints _ JSAny = do
             addImport "Language.JSON"

@@ -41,7 +41,16 @@
           "type": "array",
           "items": {
             "$ref": "#/$defs/cast"
-          }
+          },
+          "minItems": 1
+        },
+        "leads": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/cast"
+          },
+          "minItems": 1,
+          "maxItems": 10
         },
         "dvdAvailable": {
           "type": "boolean"
@@ -51,6 +60,13 @@
         },
         "someEnum": {
           "$ref": "#/$defs/someEnum"
+        },
+        "relatedFilms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 10
         }
       }
     },

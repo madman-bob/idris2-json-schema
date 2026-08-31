@@ -1,3 +1,6 @@
 . ../../testutils.sh
 
 basicTest Array
+basicTest ArrayBounded
+basicTest ArrayLong
+basicTest ArrayShort

@@ -4,3 +4,27 @@ module Main
 public export
 Main : Type
 Main = List String
+1/1: Building ArrayBounded (ArrayBounded.idr)
+module Main
+
+import Data.BoundedList
+
+public export
+Main : Type
+Main = BoundedList 1 3 String
+1/1: Building ArrayLong (ArrayLong.idr)
+module Main
+
+import Data.LongList
+
+public export
+Main : Type
+Main = LongList 1 String
+1/1: Building ArrayShort (ArrayShort.idr)
+module Main
+
+import Data.ShortList
+
+public export
+Main : Type
+Main = ShortList 3 String

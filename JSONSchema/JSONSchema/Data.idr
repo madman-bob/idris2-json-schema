@@ -30,6 +30,10 @@ mutual
     data JSONSchemaConstraints ref = JSAtom JSONAtomSchema
                                    | JSObject (List (JSONPropertySchema ref))
                                    | JSArray (JSONSchema ref)
+                                             -- min elements
+                                             (Maybe Nat)
+                                             -- max elements
+                                             (Maybe Nat)
                                    | JSEnum (List JSON)
                                    | JSRef ref
                                    | JSAnyOf (List (JSONSchema ref))

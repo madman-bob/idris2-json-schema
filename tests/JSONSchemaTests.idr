@@ -2,33 +2,10 @@ module JSONSchemaTests
 
 import Test.Golden
 
-primitiveTests : TestPool
-primitiveTests = MkTestPool "Primitive" [] Nothing [
-    "Array", "Boolean", "Nested", "Null", "Number", "Object", "String"
-  ]
-
-composeTests : TestPool
-composeTests = MkTestPool "Compose" [] Nothing [
-    "Any", "AnyOf", "Brackets", "Enum"
-  ]
-
-refTests : TestPool
-refTests = MkTestPool "Ref" [] Nothing [
-    "AwkwardNames", "CircularDefinitions", "Definitions", "Dependencies", "ReservedNames"
-  ]
-
-cliTests : TestPool
-cliTests = MkTestPool "CLI" [] Nothing [
-    "CustomNames", "Help", "JSONCasts"
-  ]
-
 main : IO ()
 main = runner [
-    testPaths "Primitive" primitiveTests,
-    testPaths "Compose" composeTests,
-    testPaths "Refs" refTests,
-    testPaths "CLI" cliTests
+    !(testsInDir "Primitive" "Primitive"),
+    !(testsInDir "Compose" "Compose"),
+    !(testsInDir "Refs" "Refs"),
+    !(testsInDir "CLI" "CLI")
   ]
-  where
-    testPaths : String -> TestPool -> TestPool
-    testPaths dir = { testCases $= map ((dir ++ "/") ++) }

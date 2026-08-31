@@ -126,11 +126,23 @@ mutual
                             -> Writer IdrisModule String
         refSchemaConstraints _ (JSAtom atomSchema) = pure $ asIdrisType atomSchema
         refSchemaConstraints name (JSArray itemSchema min max) = do
+            listType <- case (min, max) of
+                (Nothing, Nothing) => pure "List"
+                (Just min, Nothing) => do
+                    addImport "Data.LongList"
+                    pure "LongList \{show min}"
+                (Nothing, Just max) => do
+                    addImport "Data.ShortList"
+                    pure "ShortList \{show max}"
+                (Just min, Just max) => do
+                    addImport "Data.BoundedList"
+                    pure "BoundedList \{show min} \{show max}"
+
             let itemName = subName (shortName name) "Item"
-            ref <- namespaceBlock (shortName name) $ refSchema (name <.> itemName) itemSchema {asSubexpression = True}
+            itemRef <- namespaceBlock (shortName name) $ refSchema (name <.> itemName) itemSchema {asSubexpression = True}
             if asSubexpression
-                then pure $ "(List \{ref})"
-                else pure $ "List \{ref}"
+                then pure $ "(\{listType} \{itemRef})"
+                else pure $ "\{listType} \{itemRef}"
         refSchemaConstraints name (JSRef ref) = pure $ show ref
         refSchemaConstraints _ JSAny = do
             addImport "Language.JSON"

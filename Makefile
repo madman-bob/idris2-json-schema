@@ -1,6 +1,9 @@
-.PHONY: all json-schema test retest clean
+.PHONY: all install json-schema test retest clean
 
 all: json-schema
+
+install: json-schema
+	idris2 --install json-schema.ipkg
 
 json-schema: build/exec/json-schema
 

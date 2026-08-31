@@ -5,6 +5,9 @@ sourcedir = "JSONSchema"
 depends = contrib, idris2, collie
 
 modules =
+    Data.BoundedList,
+    Data.LongList,
+    Data.ShortList,
     JSONSchema,
     JSONSchema.Compiler,
     JSONSchema.Compiler.Data,

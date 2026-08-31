@@ -1,0 +1,10 @@
+["1.0", "2.0"]
+[1.0, 2.0]
+JArray [JNumber 1.0, JNumber 2.0]
+
+Nothing
+Nothing
+Just [1, 2]
+Just [1, 2, 3]
+Just [1, 2, 3, 4]
+

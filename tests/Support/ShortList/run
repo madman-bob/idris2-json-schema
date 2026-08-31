@@ -1,0 +1,13 @@
+. ../../testutils.sh
+
+supportTest ShortList.idr << EOF
+    map show xs2
+    toList xs2
+    cast {to = JSON} xs2
+
+    checkLength {n = 2} []
+    checkLength {n = 2} [1]
+    checkLength {n = 2} [1, 2]
+    checkLength {n = 2} [1, 2, 3]
+    checkLength {n = 2} [1, 2, 3, 4]
+EOF
